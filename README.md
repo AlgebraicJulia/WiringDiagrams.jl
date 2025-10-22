@@ -149,10 +149,11 @@ julia> @time G = a(f)(A, B, C, D, E, F);
 
 ## Algebras
 
-In order to define a wiring diagram algebra, define a subtype of `AbstractAlgebra` 
+In order to define a wiring diagram algebra, create a concrete subtype of
+`AbstractAlgebra` 
 
 ```julia
-struct MyAlgebra{A} <: AbstractAlgebra{A}
+struct MyAlgebra{A} <: AbstractAlgebra{A} end
 ```
 
 and define a method for the function `apply`.

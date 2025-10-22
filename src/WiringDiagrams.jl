@@ -8,6 +8,8 @@ using CliqueTrees.Utilities
 using Graphs
 using SparseArrays
 
+import AbstractTrees: parent
+
 export AbstractWiringDiagram, nb, nw, np, nop, boxes, wires, wirelabels, ports, portwires, outports, outportwires, outportlabels, portlabels, label, wire, portlabel, outwire, outportlabel
 export AbstractDendrogram, nob, outboxes, outparent
 export AbstractAlgebra, apply
