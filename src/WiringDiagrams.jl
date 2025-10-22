@@ -9,7 +9,7 @@ using Graphs
 using SparseArrays
 
 export AbstractWiringDiagram, nb, nw, np, nop, boxes, wires, wirelabels, ports, portwires, outports, outportwires, outportlabels, portlabels, label, wire, portlabel, outwire, outportlabel
-export AbstractDendrogram, nob, outboxes, parent, outparent
+export AbstractDendrogram, nob, outboxes, outparent
 export AbstractAlgebra, apply
 export Workspace
 export WiringDiagram, DWiringDiagram, FWiringDiagram
