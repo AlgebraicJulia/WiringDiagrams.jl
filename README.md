@@ -32,24 +32,6 @@ of relations
     D(i) := \inf_j \inf_k \inf_l A(i, j, k) + B(k, l) + C(l, j)
 ```
 
-... or the marginalized product of conditional probability
-distributions
-
-```math
-    D(i) := \int A(i \mid j, k) \times B(k \mid l) \times C(j, l) \, dj \, dk \, dl
-```
-
-... or the SQL query
-
-```sql
-SELECT A.i
-FROM A
-    INNER JOIN B
-        ON A.k = B.k
-    INNER JOIN C
-        ON A.j = C.j AND B.l = C.l
-```
-
 and so on and so forth. Each of these different interetations
 is specified by a *wiring diagram algebra*. Algebras are
 higher-order functions that transform wiring diagrams into
@@ -162,4 +144,4 @@ and define a method for the function `apply`.
 apply(algebra::MyAlgebra, diagram::AbstractDiagram, arguments)
 ```
 
-The object computed by `apply` should be convertible to the type `A`.
+Objects computed by this method should be convertible to the type `A`.
