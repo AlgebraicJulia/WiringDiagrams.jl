@@ -1,3 +1,4 @@
+#=
 using Documenter
 using Literate
 
@@ -54,3 +55,4 @@ deploydocs(
   repo="github.com/AlgebraicJulia/WiringDiagrams.jl.git",
   branch="gh-pages"
 )
+=#
