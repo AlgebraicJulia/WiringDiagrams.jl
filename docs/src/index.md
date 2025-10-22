@@ -1,7 +1,7 @@
-# AlgebraicTemplate.jl
+# WiringDiagrams.jl
 
 ```@meta
-CurrentModule = AlgebraicTemplate
+CurrentModule = WiringDiagrams
 ```
 
-`AlgebraicTemplate.jl` is a Julia library for...
+`WiringDiagrams.jl` is a Julia library for...

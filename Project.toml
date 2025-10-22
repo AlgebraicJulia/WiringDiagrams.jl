@@ -1,12 +1,24 @@
-name = "AlgebraicTemplate"
-uuid = "b66562e1-fa90-4e8b-9505-c909188fab76"
+name = "WiringDiagrams"
+uuid = "5B9EA594-1203-4FDA-BF59-275F9928902E"
 license = "MIT"
-authors = ["AlgebraicJulia Developer <email@algebraicjulia.org>"]
-version = "0.0.1"
+authors = ["Richard Samuelson <rsamuelson@ufl.edu.com>"]
 
 [deps]
-Catlab = "134e5e36-593f-5add-ad60-77f754baafbe"
+AbstractTrees = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
+CliqueTrees = "60701a23-6482-424a-84db-faee86b9b1f8"
+Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
+SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
+
+[weakdeps]
+OMEinsum = "ebe7aa44-baf0-506c-a96f-8464559b3922"
+
+[extensions]
+OMEinsumExt = "OMEinsum"
 
 [compat]
-Catlab = "^0.16"
-julia = "1.6"
+AbstractTrees = "0.4.5"
+CliqueTrees = "1.12.2"
+Graphs = "1.13.1"
+julia = "1.10"
+OMEinsum = "0.9.2"
+SparseArrays = "1.12.0"

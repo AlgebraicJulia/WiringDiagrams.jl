@@ -1,3 +1,4 @@
-using Aqua, AlgebraicTemplate 
+using Aqua
+using WiringDiagrams 
 
-Aqua.test_all(AlgebraicTemplate, ambiguities=false,)
+Aqua.test_all(WiringDiagrams)
