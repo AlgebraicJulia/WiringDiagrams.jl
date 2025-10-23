@@ -1,3 +1,4 @@
+#=
 using WiringDiagrams
 using Documenter
 
@@ -6,9 +7,10 @@ makedocs(;
     format = Documenter.HTML(),
     sitename = "WiringDiagrams.jl",
     checkdocs = :none,
-    pages = ["Library Reference" => "api.md"],
+    pages = ["WiringDiagrams.jl" => "index.md", "Library Reference" => "api.md"],
 )
 
 deploydocs(;
     target = "build", repo = "github.com/AlgebraicJulia/WiringDiagrams.jl.git", branch = "gh-pages"
 )
+=#

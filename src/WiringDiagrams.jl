@@ -8,6 +8,7 @@ using CliqueTrees: PermutationOrAlgorithm, SupernodeType, UnionFind,
     cliquetree!, incident, arcs
 using CliqueTrees.Utilities
 using Graphs
+using LinearAlgebra
 using SparseArrays
 
 import AbstractTrees: parent
@@ -23,6 +24,7 @@ export WiringDiagram, DWiringDiagram, FWiringDiagram
 export StaticWiringDiagram
 export Dendrogram, DDendrogram, FDendrogram
 export ArrayAlgebra
+export PSDAlgebra
 
 function uniformweight(l)
     return 1.0
@@ -47,20 +49,21 @@ include("workspaces.jl")
 # Wiring Diagrams #
 # --------------- #
 
-include("wiring_diagrams.jl")
-include("static_wiring_diagrams.jl")
+include("wiring_diagrams/wiring_diagrams.jl")
+include("wiring_diagrams/static_wiring_diagrams.jl")
 
 # ----------- #
 # Dendrograms #
 # ----------- #
 
-include("dendrograms.jl")
+include("dendrograms/dendrograms.jl")
 
 # -------- #
 # Algebras #
 # -------- #
 
-include("array_algebras.jl")
+include("algebras/array_algebras.jl")
+include("algebras/psd_algebras.jl")
 
 # ---------- #
 # Operations #
