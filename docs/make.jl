@@ -1,4 +1,4 @@
-using CliqueTrees
+using WiringDiagrams
 using Documenter
 
 makedocs(;
