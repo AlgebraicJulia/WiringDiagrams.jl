@@ -82,8 +82,6 @@ requres $10^{10}$ floating point operations. We can address this
 problem by *factorizing* this wiring diagram into a tree of smaller
 wiring diagrams. The resulting object is called a dendrogram.
 
-Dendrograms
-
 ### Example
 
 ```julia-repl

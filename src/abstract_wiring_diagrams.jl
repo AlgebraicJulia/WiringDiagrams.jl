@@ -1,5 +1,5 @@
 """
-    AbstractWiringDiagram{I, L}
+    AbstractWiringDiagram{I, L} <: AbstractOperation{I, L}
 
 A labelled wiring diagram is a diagram in Set of the form
 
@@ -45,7 +45,7 @@ port
     port(b, i) := p + i - 1 ∈ box⁻¹(b).
 
 """
-abstract type AbstractWiringDiagram{I <: Integer, L} end
+abstract type AbstractWiringDiagram{I, L} <: AbstractOperation{I, L} end
 
 function CliqueTrees.BipartiteGraph(diagram::AbstractWiringDiagram{I}) where {I <: Integer}
     B = nb(diagram)
@@ -98,52 +98,32 @@ function Base.convert(::Type{Dgm}, diagram::AbstractWiringDiagram) where {Dgm <:
     return Dgm(diagram)
 end
 
-function Base.show(io::IO, ::MIME"text/plain", diagram::Dgm) where {Dgm <: AbstractWiringDiagram{<:Integer, Nothing}}
-    B = nb(diagram)
+# ---------------------------- #
+# Abstract Operation Interface #
+# ---------------------------- #
 
-    print(io, B)
-    print(io, "-box ")
-    print(io, Dgm)
-    print(io, ":\n ")
-    print(io, nop(diagram))
-
-    for b in boxes(diagram)
-        if b <= MAX_ITEMS_PRINTED || b == B == MAX_ITEMS_PRINTED + 1
-            print(io, "\n └─ ")
-            print(io, np(diagram, b))
-        else
-            print(io, "\n  ⋮")
-            print(io, "\n └─ ")
-            print(io, np(diagram, B))
-            break
-        end
-    end
-
-    return
+function arity(diagram::AbstractWiringDiagram)
+    return nb(diagram)
 end
 
-function Base.show(io::IO, ::MIME"text/plain", diagram::Dgm) where {Dgm <: AbstractWiringDiagram}
-    B = nb(diagram)
+function eachargument(diagram::AbstractWiringDiagram)
+    return boxes(diagram)
+end
 
-    print(io, B)
-    print(io, "-box ")
-    print(io, Dgm)
-    print(io, ":\n ")
-    print(io, outportlabels(diagram))
+function domain(diagram::AbstractWiringDiagram, b::Integer)
+    return portlabels(diagram, b)
+end
 
-    for b in boxes(diagram)
-        if b <= MAX_ITEMS_PRINTED || b == B == MAX_ITEMS_PRINTED + 1
-            print(io, "\n └─ ")
-            print(io, portlabels(diagram, b))
-        else
-            print(io, "\n  ⋮")
-            print(io, "\n └─ ")
-            print(io, portlabels(diagram, B))
-            break
-        end
-    end
+function domain(diagram::AbstractWiringDiagram{<:Any, Nothing}, b::Integer)
+    return np(diagram, b)
+end
 
-    return
+function codomain(diagram::AbstractWiringDiagram)
+    return outportlabels(diagram)
+end
+
+function codomain(diagram::AbstractWiringDiagram{<:Any, Nothing})
+    return nop(diagram)
 end
 
 # --------------------------------- #

@@ -484,6 +484,325 @@ function WiringDiagram(workspace::Workspace{I, L}, dendrogram::AbstractDendrogra
     )
 end
 
+################################
+# Abstract Operation Interface #
+################################
+
+function compose(i::I, outer::AbstractWiringDiagram{I, L}, inner::AbstractWiringDiagram{I, L}) where {I <: Integer, L}
+    # Let Do := outer
+    #
+    #          + ----------------- +
+    #          |        Bo         |
+    #          |        ↑ boxo     |
+    #          |        Po         |
+    #    Do := | labelo ↓ wireo    |
+    #          |    L ← Wo         |
+    #          |        ↑ outwireo |
+    #          |        Qo         |
+    #          + ----------------- +
+    #
+    Do = outer; Bo = nb(Do); Wo = nw(Do); Po = np(Do); Qo = nop(Do)
+
+    # Di := inner is a diagram
+    #
+    #          + ----------------- +
+    #          |        Bi         |
+    #          |        ↑ boxi     |
+    #          |        Pi         |
+    #    Di := | labeli ↓ wirei    |
+    #          |    L ← Wi         |
+    #          |        ↑ outwirei |
+    #          |        Qi         |
+    #          + ----------------- +
+    #
+    # satisfying
+    #
+    #     Oi ≅ {po ∈ Po | boxo(po) = i}.
+    #
+    Di = inner; Bi = nb(Di); Wi = nw(Di); Pi = np(Di); Qi = nop(Di)
+
+    # We wish to construct the composite diagram Dc := Do ∘i Di.
+    #
+    #          + ---------------- +
+    #          |       Bc         |
+    #          |       ↑ boxc     |
+    #          |       Pc         |
+    #    Dc := |  lblb ↓ wirec    |
+    #          |   L ← Wc         |
+    #          |       ↑ outwirec |
+    #          |       Qc         |
+    #          + ---------------- +
+    #
+    # We begin by computing a pushout (Wc, fo, fi).
+    #
+    #     + ------------------ +
+    #     |           wireo    |
+    #     |          Qi → Wo   |
+    #     | outwirei ↓ ⌟  ↓ fo |
+    #     |          Wi → Wc   |
+    #     |            fi      |
+    #     + ------------------ +
+    #
+    # We represent the legs fo and fi as a composite [fo, fi] := prj ; img of mappings
+    #
+    #     prj: Wo + Wi → Wo + Wi
+    #     img: Wo + Wi → Wc.
+    #
+    # We also mainttain a mapping
+    #
+    #     inv: Wc → Wo + Wi
+    #
+    # satisfying prj = prj ; img ; inv. Initially, we set Wc = Wo + Wi
+    # and prj = img = inv = id.
+    Wc = Wo + Wi
+
+    prj = UnionFind{I}(Wo + Wi)
+    img = FVector{I}(undef, Wo + Wi)
+    inv = FVector{I}(undef, Wo + Wi)
+
+    prj.rank .= zero(I)
+    prj.parent .= zero(I)
+    img .= oneto(Wo + Wi)
+    inv .= oneto(Wo + Wi)
+
+    # For all ports qi ∈ Qi, let po ∈ Po be the port satisfying
+    #
+    #     qi ∼ po 
+    #
+    for (qi, po) in zip(outports(Di), ports(Do, i))
+        # Let wo ∈ Wo be the wire 
+        #
+        #     wo := wireo(po)
+        #
+        wo = wire(Do, po)
+
+        # Let wi ∈ Wi be the wire
+        #
+        #     wi := outwirei(qi)
+        #
+        wi = outwire(Di, qi)
+
+        # Let ro ∈ Wo + Wi be the wire
+        #
+        #     ro := prj(wo)
+        #
+        ro = prj[wo]
+
+        # Let ri ∈ Wo + Wi be the wire
+        #
+        #     ri := prj(wi)
+        #
+        ri = prj[Wo + wi]
+
+        # If ro ≠ ri...
+        if ro != ri
+            # Let rx ∈ {ro, ri}.
+            #
+            # For all w ∈ Wo such that prj(w) = ro, set
+            #
+            #     prj(w) := rx.
+            # 
+            # For all w ∈ Wi such that prj(w) = ri, set
+            #
+            #     prj(w) := rx.
+            #
+            rx = union!(prj, ro, ri)
+
+            # Let ry ∈ {ro, ri} satisfy rx != ry.
+            if rx != ri
+                ry = ri
+            else
+                ry = ro
+            end
+
+            # Let rz be a wire in
+            # 
+            #     im prj ⊆ Wo + Wi.
+            #
+            # Remove img(rz) from Wc.
+            rz = inv[Wc]; Wc -= one(I)
+
+            # If ry != rz...
+            if ry != rz
+                # Let wy ∈ Wc be the wire
+                #
+                #     wy := img(ry).
+                #
+                # Set img(rz) := ry and inv(ry) := rz.
+                wy = img[rz] = img[ry]; inv[wy] = rz
+            end
+        end
+    end
+
+    # Next, we construct the mappings
+    #
+    #     fo: Wo → Wc
+    #     fi: Wi → Wc
+    #
+    # by composing [fo, fi] := prj ; img.
+    f = prj.rank
+
+    for w in oneto(Wo + Wi)
+        f[w] = img[prj[w]]
+    end
+
+    fo = f; fi = view(f, Wo + one(I):Wo + Wi)
+
+    # Let Bo1, Bo2, Po1, Po2 be the sets
+    #
+    #     Bo1 := {bo ∈ Bo | bo < i} ⊆ Bo
+    #     Bo2 := {bo ∈ Bo | bo > i} ⊆ Bo
+    #
+    #     Po1 := {po ∈ Po | boxo(po) < i } ⊆ Po
+    #     Po2 := {po ∈ Po | boxo(po) > i } ⊆ Po
+    #
+    pos = ports(Do, i)
+    Bo1 = i          - one(I); Bo2 = Bo - i
+    Po1 = first(pos) - one(I); Po2 = Po - last(pos)
+
+    # We construct Dc with dimensions
+    #
+    #     Bc := Bo1 + Bi + Bo2
+    #     Pc := Po1 + Pi + Po2
+    #     Oc := Oo
+    #
+    # along with the previously computed Wc.
+    Bc = Bo1 + Bi + Bo2
+    Pc = Po1 + Pi + Po2
+    Qc = Qo
+    Dc = WiringDiagram{I, L}(Bc, Wc, Pc, Qc)
+
+    # The mapping boxc: Pc → Bc is given by
+    #
+    #     boxc := [boxo | Po1, boxi, boxo | Po2]
+    #
+    # where
+    #
+    #     boxo | Po1: Po1 → Bo1
+    #     boxo | Po2: Po2 → Bo2
+    #
+    # are the restrictions of boxo to the sets Po1 and Po2.
+    pc = one(I)
+
+    # For all boxes bo ∈ Bo1
+    for bo in oneto(Bo1)
+        # For all ports po ∈ Po such that  
+        #
+        #     boxo(po) = bo,
+        #
+        # set boxc(po) := bo.
+        Dc.xprt[bo] = pc; pc += np(Do, bo)
+    end
+
+    # for all boxes bi ∈ Bi...
+    for bi in boxes(Di)
+        # For all ports pi ∈ Pi such that  
+        #
+        #     boxi(pi) = bi,
+        #
+        # set boxc(pi) := bi.
+        Dc.xprt[Bo1 + bi] = pc; pc += np(Di, bi)
+    end
+
+    # For all boxes bo ∈ Bo2...
+    for bo in Bo - Bo2 + one(I):Bo
+        # For all ports po ∈ Po such that  
+        #
+        #     boxo(po) = bo,
+        #
+        # set boxc(po) := bo.
+        Dc.xprt[Bi + bo - one(I)] = pc; pc += np(Do, bo)
+    end
+
+    Dc.xprt[Bc + one(I)] = pc 
+
+    # The mapping labelc: Wc → L is given by
+    #   
+    #     fo ; labelc := labelo
+    #     fi ; labelc := labeli
+    #  
+    for wo in wires(Do)
+        # Let wc ∈ Wc be the wire
+        #
+        #     wc := fo(wo)
+        #
+        # and set labelc(wc) := labelo(wo).
+        wc = fo[wo]; Dc.lbl[wc] = label(Do, wo)
+    end
+
+    for wi in wires(Di)
+        # Let wc ∈ Wc be the wire
+        #
+        #     wi := fi(wi)
+        #
+        # and set labelc(wc) := labeli(wi).
+        wc = fi[wi]; Dc.lbl[wc] = label(Di, wi)
+    end
+
+    # The mapping wirec: Pc → Wc is given by
+    #
+    #     wirec := [wireo | Po1 ; fo, wirei ; fi, wireo | Po2 ; fo].
+    #
+    # where
+    #
+    #     wireo | Po1: Po1 → Wo
+    #     wireo | Po2: Po2 → Wo
+    #
+    # are the restrictions of wireo to the sets Po1 and Po2.
+
+    # For all ports po ∈ Po1...
+    for po in oneto(Po1)
+        # Let wo ∈ Wo be the wire
+        #
+        #    wo := wireo(po)
+        #
+        # and set wirec(po) := fo(wo).
+        wo = wire(Do, po); Dc.wre[po] = fo[wo]; Dc.prtlbl[po] = portlabel(Do, po)
+    end
+
+    # For all ports pi ∈ Pi...
+    for pi in ports(Di)
+        # Let wi ∈ Wi be the wire
+        #
+        #    wi := wirei(pi)
+        #
+        # and set wirec(pi) := fi(wi).
+        wi = wire(Di, pi); Dc.wre[Po1 + pi] = fi[wi]; Dc.prtlbl[Po1 + pi] = portlabel(Di, pi)
+    end
+
+    # For all ports po ∈ Po2...
+    for po in Po - Po2 + one(I):Po
+        # Let wo ∈ Wo be the wire
+        #
+        #    wo := wireo(po)
+        #
+        # and set wirec(po) := fo(wo).
+        wo = wire(Do, po); Dc.wre[Pi - Qi + po] = fo[wo]; Dc.prtlbl[Pi - Qi + po] = portlabel(Do, po)
+    end
+
+    # The mapping outc: Qc → Wc is given by
+    #
+    #     outwirec := outwireo ; fo.
+    #
+    # For all ports qo ∈ Qo...
+    for qo in outports(Do)
+        # Let wo ∈ Wo be the wire
+        #
+        #     wo := outwireo(qo)
+        #
+        wo = outwire(Do, qo)
+
+        # Let wc ∈ Wc be the wire
+        #
+        #     wc := fo(wo)
+        #
+        # and set outwirec(pd) := fo(wd).
+        Dc.outwre[qo] = fo[wo]; Dc.outprtlbl[qo] = outportlabel(Do, qo)
+    end
+
+    return Dc
+end
+
 # --------------------------------- #
 # Abstract Wiring Diagram Interface #
 # --------------------------------- #
@@ -594,4 +913,3 @@ end
     @inbounds l = diagram.outprtlbl[q]
     return l
 end
-

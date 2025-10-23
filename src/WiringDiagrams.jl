@@ -3,14 +3,19 @@ module WiringDiagrams
 using AbstractTrees
 using Base: @propagate_inbounds, oneto
 using CliqueTrees
-using CliqueTrees: PermutationOrAlgorithm, SupernodeType, DEFAULT_ELIMINATION_ALGORITHM, DEFAULT_SUPERNODE_TYPE, linegraph, cliquetree!, incident, arcs
+using CliqueTrees: PermutationOrAlgorithm, SupernodeType, UnionFind,
+    DEFAULT_ELIMINATION_ALGORITHM, DEFAULT_SUPERNODE_TYPE, linegraph,
+    cliquetree!, incident, arcs
 using CliqueTrees.Utilities
 using Graphs
 using SparseArrays
 
 import AbstractTrees: parent
 
-export AbstractWiringDiagram, nb, nw, np, nop, boxes, wires, wirelabels, ports, portwires, outports, outportwires, outportlabels, portlabels, label, wire, portlabel, outwire, outportlabel
+export AbstractOperation, arity, domain, codomain, compose
+export AbstractWiringDiagram, nb, nw, np, nop, boxes, wires, wirelabels,
+    ports, portwires, outports, outportwires, outportlabels, portlabels,
+    label, wire, portlabel, outwire, outportlabel
 export AbstractDendrogram, nob, outboxes, outparent
 export AbstractAlgebra, apply
 export Workspace
@@ -27,6 +32,7 @@ end
 # Abstract Types #
 # -------------- #
 
+include("abstract_operations.jl")
 include("abstract_wiring_diagrams.jl")
 include("abstract_dendrograms.jl")
 include("abstract_algebras.jl")

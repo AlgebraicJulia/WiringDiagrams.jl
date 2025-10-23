@@ -75,7 +75,7 @@ to the objects
   - boxwire(w, k) := w + k - 1 ∈ wirebox⁻¹(c)
 
 """
-abstract type AbstractDendrogram{I <: Integer, L} end
+abstract type AbstractDendrogram{I, L} <: AbstractOperation{I, L} end
 
 function CliqueTrees.treewidth(dendrogram::AbstractDendrogram)
     return treewidth(uniformweight, dendrogram)
@@ -137,52 +137,32 @@ function CliqueTrees.separatorwidth(f::Function, dendrogram::AbstractDendrogram)
     return maxwidth
 end
 
-function Base.show(io::IO, ::MIME"text/plain", dendrogram::Dgm) where {Dgm <: AbstractDendrogram{<:Integer, Nothing}}
-    B = nb(dendrogram); C = nob(dendrogram) 
+# ---------------------------- #
+# Abstract Operation Interface #
+# ---------------------------- #
 
-    print(io, B)
-    print(io, "-box ")
-    print(io, Dgm)
-    print(io, ":\n ")
-    print(io, nop(dendrogram, C))
-
-    for b in boxes(dendrogram)
-        if b <= MAX_ITEMS_PRINTED || b == B == MAX_ITEMS_PRINTED + 1
-            print(io, "\n └─ ")
-            print(io, np(dendrogram, b))
-        else
-            print(io, "\n  ⋮")
-            print(io, "\n └─ ")
-            print(io, np(dendrogram, B))
-            break
-        end
-    end
-
-    return
+function arity(dendrogram::AbstractDendrogram)
+    return nb(dendrogram)
 end
 
-function Base.show(io::IO, ::MIME"text/plain", dendrogram::Dgm) where {Dgm <: AbstractDendrogram}
-    B = nb(dendrogram); C = nob(dendrogram)
+function eachargument(dendrogram::AbstractDendrogram)
+    return boxes(dendrogram)
+end
 
-    print(io, B)
-    print(io, "-box ")
-    print(io, Dgm)
-    print(io, ":\n ")
-    print(io, outportlabels(dendrogram, C))
+function domain(dendrogram::AbstractDendrogram, b::Integer)
+    return portlabels(dendrogram, b)
+end
 
-    for b in boxes(dendrogram)
-        if b <= MAX_ITEMS_PRINTED || b == B == MAX_ITEMS_PRINTED + 1
-            print(io, "\n └─ ")
-            print(io, portlabels(dendrogram, b))
-        else
-            print(io, "\n  ⋮")
-            print(io, "\n └─ ")
-            print(io, portlabels(dendrogram, B))
-            break
-        end
-    end
+function domain(dendrogram::AbstractDendrogram{<:Any, Nothing}, b::Integer)
+    return np(dendrogram, b)
+end
 
-    return
+function codomain(dendrogram::AbstractDendrogram)
+    return outportlabels(dendrogram, nob(dendrogram))
+end
+
+function codomain(dendrogram::AbstractDendrogram{<:Any, Nothing})
+    return nop(dendrogram, nob(dendrogram))
 end
 
 # ----------------------------- #
