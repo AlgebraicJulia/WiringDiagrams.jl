@@ -100,9 +100,18 @@ Get the codomain of an operation.
 codomain(operation::AbstractOperation)
 
 """
+    compose(outer::AbstractOperation, inner)
+"""
+function compose(outer::AbstractOperation, inner)
+    return compose(boxes(outer), outer, inner)
+end
+
+"""
     compose(i, outer::AbstractOperation, inner)
 """
 function compose(i, outer::AbstractOperation, inner)
+    @assert length(i) == length(inner)
+
     diagram = foldr(zip(i, inner); init=outer) do (i, inner), outer
         return compose(i, outer, inner)
     end

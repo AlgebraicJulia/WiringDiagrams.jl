@@ -33,6 +33,10 @@ function StaticWiringDiagram(diagram::AbstractWiringDiagram{I, L}) where {I <: I
     return StaticWiringDiagram{L, Prt, Wre, OutWre, Lbl, PrtLbl, OutPrtLbl}()
 end
 
+function StaticWiringDiagram(args...; kw...)
+    return StaticWiringDiagram(WiringDiagram(args...; kw...))
+end
+
 function Base.show(io::IO, ::Type{<:StaticWiringDiagram{L}}) where {L}
     print(io, "StaticWiringDiagram{$L, …}")
 end

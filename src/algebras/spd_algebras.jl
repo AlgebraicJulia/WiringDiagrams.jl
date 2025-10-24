@@ -1,6 +1,10 @@
-struct PSDAlgebra{M <: AbstractMatrix} <: AbstractAlgebra{M} end
+struct SPDAlgebra{M <: AbstractMatrix} <: AbstractAlgebra{M} end
 
-function apply(algebra::PSDAlgebra{M}, diagram::AbstractWiringDiagram{I}, arguments) where {T, M <: AbstractMatrix{T}, I <: Integer}
+# -------------------------- #
+# Abstract Algebra Interface #
+# -------------------------- #
+
+function apply(algebra::SPDAlgebra{M}, diagram::AbstractWiringDiagram{I}, arguments) where {T, M <: AbstractMatrix{T}, I <: Integer}
     W = nw(diagram)
     Q = nop(diagram)
     R = W - Q
@@ -16,7 +20,7 @@ function apply(algebra::PSDAlgebra{M}, diagram::AbstractWiringDiagram{I}, argume
         f[w] = zero(I)
 
         for ww in wires(diagram)
-            WW[ww, w] = zero(I)
+            WW[ww, w] = zero(T)
         end
     end
 
