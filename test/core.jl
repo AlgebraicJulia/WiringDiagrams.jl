@@ -34,6 +34,24 @@ function random_regular_eincode()
     return array, inputs, output, size_dict
 end
 
+@testset "Printing" begin
+    _, inputs, output, size_dict = random_regular_eincode()
+    diagram = WiringDiagram(inputs, output, size_dict)
+    static = StaticWiringDiagram(diagram)
+    dendrogram = Dendrogram(log2, diagram)
+    operation = ArrayAlgebra{Array{Float64}}()(dendrogram)
+
+    @test isa(repr("text/plain", diagram), String)
+    @test isa(repr("text/plain", static), String)
+    @test isa(repr("text/plain", dendrogram), String)
+    @test isa(repr("text/plain", operation), String)
+
+    @test isa(repr(diagram), String)
+    @test isa(repr(static), String)
+    @test isa(repr(dendrogram), String)
+    @test isa(repr(operation), String)
+end
+
 @testset "ArrayAlgebra" begin
     algebra = ArrayAlgebra{Array{Float64}}()
 
