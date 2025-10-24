@@ -63,7 +63,8 @@ end
         static = StaticWiringDiagram(diagram)
         dendrogram = Dendrogram(log2, diagram)
 
-        @test 1.0 <= separatorwidth(log2, dendrogram) <= treewidth(log2, dendrogram) <= sum(log2, values(size_dict))
+        @test 1.0 <= treewidth(log2, dendrogram) <= sum(log2, values(size_dict))
+        @test 1.0 <= separatorwidth(log2, dendrogram) <= sum(log2, values(size_dict))
 
         out1 = einsum(eincode, Tuple(array))
         out2 = algebra(diagram)(array...)

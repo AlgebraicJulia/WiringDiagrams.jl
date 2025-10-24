@@ -114,6 +114,26 @@ end
 function CliqueTrees.separatorwidth(f::Function, dendrogram::AbstractDendrogram)
     maxwidth = nothing
 
+    for b in boxes(dendrogram)  
+        width = nothing
+
+        for l in portlabels(dendrogram, b)
+            if !isnothing(width)
+                width += f(l)
+            else
+                width = f(l)
+            end
+        end
+
+        if !isnothing(width)
+            if !isnothing(maxwidth)
+                maxwidth = max(maxwidth, width)
+            else
+                maxwidth = width
+            end
+        end
+    end
+
     for c in outboxes(dendrogram)
         width = nothing
 
