@@ -45,6 +45,8 @@ end
         static = StaticWiringDiagram(diagram)
         dendrogram = Dendrogram(log2, diagram)
 
+        @test 1.0 <= separatorwidth(log2, dendrogram) <= treewidth(log2, dendrogram) <= sum(log2, values(size_dict))
+
         out1 = einsum(eincode, Tuple(array))
         out2 = algebra(diagram)(array...)
         out3 = algebra(static)(array...)
@@ -54,6 +56,31 @@ end
         @test out2 ≈ out3
         @test out3 ≈ out4
     end
+end
+
+@testset "SPDAlgebra" begin
+    A = rand(10, 10); A *= A'
+    B = rand(10, 10); B *= B'
+
+    A11 = A[1:5,  1:5]; A21 = A[6:10, 1:5]; A22 = A[6:10, 6:10]
+    B11 = B[1:5,  1:5]; B21 = B[6:10, 1:5]; B22 = B[6:10, 6:10]
+
+    diagram = WiringDiagram(
+        [[0, 1, 2, 3, 4, 0, 1, 2, 3, 4], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]],
+        [4, 3, 2, 1, 0],
+    )
+
+    algebra = SPDAlgebra{Matrix{Float64}}()
+
+    M = algebra(diagram)(A, B)
+
+    N = [
+        A11 + A21 + A21' + A22 + B11 B21'
+        B21                          B22
+    ]
+
+    @test size(M) == (5, 5)
+    @test inv(M) ≈ inv(N)[5:-1:1, 5:-1:1]
 end
 
 @testset "AbstractWiringDiagram" begin

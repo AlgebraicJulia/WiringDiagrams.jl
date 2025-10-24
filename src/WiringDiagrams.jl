@@ -17,7 +17,7 @@ export AbstractOperation, arity, domain, codomain, compose
 export AbstractWiringDiagram, nb, nw, np, nop, boxes, wires, wirelabels,
     ports, portwires, outports, outportwires, outportlabels, portlabels,
     label, wire, portlabel, outwire, outportlabel
-export AbstractDendrogram, nob, outboxes, outparent
+export AbstractDendrogram, nob, outboxes, outparent, separatorwidth, treewidth
 export AbstractAlgebra, apply
 export Workspace
 export WiringDiagram, DWiringDiagram, FWiringDiagram
