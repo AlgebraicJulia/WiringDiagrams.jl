@@ -1,7 +1,8 @@
 [deps]
-WiringDiagrams = "5B9EA594-1203-4FDA-BF59-275F9928902E"
+AbstractTrees = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 Literate = "98b081ad-f1c9-55d3-8b20-4c87d4299306"
+WiringDiagrams = "5b9ea594-1203-4fda-bf59-275f9928902e"
 
 [sources]
-WiringDiagrams = {path=".."}
+WiringDiagrams = {path = ".."}
