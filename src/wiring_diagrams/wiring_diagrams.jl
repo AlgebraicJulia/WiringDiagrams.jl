@@ -13,82 +13,53 @@ struct WiringDiagram{
     } <: AbstractWiringDiagram{I, L}
 
     """
-    B is equal to the set
-
-        B = {1, ..., nb} ⊆ ℕ.
-
+    ``B`` is equal to the set ``B = \\{1, \\ldots, nb\\} \\subseteq \\mathbb{N}``.
     """
     nb::I
 
     """
-    W is equal to the set
-
-        W = {1, ..., nw} ⊆ ℕ.
-
+    ``W`` is equal to the set ``W = \\{1, \\ldots, nw\\} \\subseteq \\mathbb{N}``.
     """
     nw::I
 
     """
-    P is equal to the set
-
-        P = {1, ..., np} ⊆ ℕ.
-
+    ``P`` is equal to the set ``P = \\{1, \\ldots, np\\} \\subseteq \\mathbb{N}``.
     """
     np::I
 
     """
-    Q is equal to the set
-
-        Q = {1, ..., nop} ⊆ ℕ.
-
+    ``Q`` is equal to the set ``Q = \\{1, \\ldots, nop\\} \\subseteq \\mathbb{N}``.
     """
     nop::I
 
     """
-    Each box b ∈ B is indicent to the ports
-
-        {xprt[b], ..., xprt[b + 1] - 1} ⊆ P.
-
+    Each box ``b \\in B`` is incident to the ports
+    ``\\{xprt[b], \\ldots, xprt[b + 1] - 1\\} \\subseteq P``.
     """
     xprt::XPrt
 
     """
-    Each port p ∈ P is incident to the wire
-
-        wre[p] ∈ W.
-
+    Each port ``p \\in P`` is incident to the wire ``wre[p] \\in W``.
     """
     wre::Wre
 
     """
-    Each outer port p ∈ O is incident to the wire
-
-        outwre[p] ∈ W.
-
+    Each outer port ``q \\in Q`` is incident to the wire ``outwre[q] \\in W``.
     """
     outwre::OutWre
 
     """
-    Each wire w ∈ W has label
-
-        lbl[w] ∈ L.
-
+    Each wire ``w \\in W`` has label ``lbl[w] \\in L``.
     """
     lbl::Lbl
 
     """
-    For all ports p ∈ P,
-
-        prtlbl[p] = lbl[wre[p]].
-
+    For all ports ``p \\in P``, ``prtlbl[p] = lbl[wre[p]]``.
     """
     prtlbl::PrtLbl
 
     """
-    For all outer ports p ∈ O,
-
-        outprtlbl[p] = lbl[outwre[p]].
-
+    For all outer ports ``q \\in Q``, ``outprtlbl[q] = lbl[outwre[q]]``.
     """
     outprtlbl::OutPrtLbl
 
@@ -234,10 +205,10 @@ end
 
 Construct an uninitialized diagram with dimensions
 
-    |B| = nb
-    |W| = nw
-    |P| = np
-    |O| = nop.
+  - ``|B| = nb``
+  - ``|W| = nw``
+  - ``|P| = np``
+  - ``|Q| = nop``
 
 """
 function WiringDiagram{I, L}(nb::Integer, nw::Integer, np::Integer, nop::Integer) where {I <: Integer, L}
@@ -264,24 +235,22 @@ end
 """
     WiringDiagram(inputs::AbstractVector, output::AbstractVector[, label::AbstractDict])
 
-Construct a wiring diagram. The vector `inputs` specifies the
-function
-
-    port(b, i) := inputs[b][i]
-
-for all boxes b ∈ B and i ∈ {1, ..., |box⁻¹(b)|}. The
-vector `output` specifies the function
-
-    outwire(q) := output[q]
-
-for all outer ports q ∈ Q, and the dictionary `label` specifies
+Construct a wiring diagram. The vector `inputs` specifies the function
+```math
+\\text{port}(b, i) := \\mathtt{inputs[b][i]}
+```
+for all boxes ``b \\in B`` and indices ``i \\in \\{1, \\ldots, |\\text{box}^{-1}(b)|\\}``.
+The vector `output` specifies the function
+```math
+\\text{outwire}(q) := \\mathtt{output[q]}
+```
+for all outer ports ``q \\in Q``, and the dictionary `label` specifies
 the function
-
-    label(w) := label[w]
-
-for all wires w ∈ W. If `label` is omitted, then the constructed
-wiring diagram will be unlabeled (i.e. all labels will be set to
-`nothing`).
+```math
+\\text{label}(w) := \\mathtt{label[w]}
+```
+for all wires ``w \\in W``. If `label` is omitted, then the constructed
+wiring diagram will be unlabeled (i.e. all labels will be set to `nothing`).
 """
 function (::Type{Dgm})(inputs::AbstractVector, output::AbstractVector{S}, label::AbstractDict{S}) where {I <: Integer, Dgm <: WiringDiagram{I}, S}
     index = Dict{S, I}(); B = W = P = Q = zero(I)

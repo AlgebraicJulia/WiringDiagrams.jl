@@ -21,154 +21,104 @@ struct Dendrogram{
     } <: AbstractDendrogram{I, L}
 
     """
-    B is equal to the set
-
-        {1, ..., nb} ⊆ ℕ.
-
+    ``B`` is equal to the set ``\\{1, \\ldots, nb\\} \\subseteq \\mathbb{N}``.
     """
     nb::I
 
     """
-    C is equal to the set
-
-        {1, ..., nob} ⊆ ℕ.
-
+    ``C`` is equal to the set ``\\{1, \\ldots, nob\\} \\subseteq \\mathbb{N}``.
     """
     nob::I
 
     """
-    W is equal to the set
-
-        {1, ..., nw} ⊆ ℕ.
-
+    ``W`` is equal to the set ``\\{1, \\ldots, nw\\} \\subseteq \\mathbb{N}``.
     """
     nw::I
 
     """
-    P is equal to the set
-
-        {1, ..., np} ⊆ ℕ.
-
+    ``P`` is equal to the set ``\\{1, \\ldots, np\\} \\subseteq \\mathbb{N}``.
     """
     np::I
 
     """
-    Q is equal to the set
-
-        {1, ..., nop} ⊆ ℕ.
-
+    ``Q`` is equal to the set ``\\{1, \\ldots, nop\\} \\subseteq \\mathbb{N}``.
     """
     nop::I
 
     """
-    Each box b ∈ B is incident to the ports
-
-        {xprt[b], ..., xprt[b + 1] - 1} ⊆ P.
-
+    Each box ``b \\in B`` is incident to the ports
+    ``\\{xprt[b], \\ldots, xprt[b + 1] - 1\\} \\subseteq P``.
     """
     xprt::XPrt
 
     """
-    Each outer box c ∈ C is incident to the outer ports
-
-        {xoutprt[c], ..., xoutprt[c + 1] - 1} ⊆ Q.
-
+    Each outer box ``c \\in C`` is incident to the outer ports
+    ``\\{xoutprt[c], \\ldots, xoutprt[c + 1] - 1\\} \\subseteq Q``.
     """
     xoutprt::XOutPrt
 
     """
-    Each outer box c ∈ C is incident to the boxes
-
-        {chd[xchd[c]], ..., chd[xchd[c + 1] - 1]} ⊆ B.
-
+    Each outer box ``c \\in C`` is incident to the boxes
+    ``\\{chd[xchd[c]], \\ldots, chd[xchd[c + 1] - 1]\\} \\subseteq B``.
     """
     xchd::XChd
 
     """
-    Each outer box c ∈ C is incident to the outer boxes
-
-        {outchd[xoutchd[c]], ..., outchd[xoutchd[c + 1] - 1]} ⊆ C.        
-
+    Each outer box ``c \\in C`` is incident to the outer boxes
+    ``\\{outchd[xoutchd[c]], \\ldots, outchd[xoutchd[c + 1] - 1]\\} \\subseteq C``.
     """
     xoutchd::XOutChd
 
     """
-    Each outer box c ∈ C is incident to the wires
-
-        {xwrebox[c], ..., xwrebox[c + 1] - 1} ⊆ W.
-
+    Each outer box ``c \\in C`` is incident to the wires
+    ``\\{xwrebox[c], \\ldots, xwrebox[c + 1] - 1\\} \\subseteq W``.
     """
     xwrebox::XWreBox
 
     """
-    Each box b ∈ B has parent 
-
-        pnt[b] ∈ C.
-
+    Each box ``b \\in B`` has parent ``pnt[b] \\in C``.
     """
     pnt::Pnt
 
     """
-    Each outer box c ∈ C has parent
-
-        outpnt[c] ∈ C
-
+    Each outer box ``c \\in C`` has parent ``outpnt[c] \\in C``.
     """
     outpnt::OutPnt
 
     """
-    Each outer box c ∈ C is incident to the boxes
-
-        {chd[xchd[c]], ..., chd[xchd[c + 1] - 1]} ⊆ B.
-
+    Each outer box ``c \\in C`` is incident to the boxes
+    ``\\{chd[xchd[c]], \\ldots, chd[xchd[c + 1] - 1]\\} \\subseteq B``.
     """
     chd::Chd
 
     """
-    Each outer box c ∈ C is incident to the outer boxes
-
-        {outchd[xoutchd[c]], ..., outchd[xoutchd[c + 1] - 1]} ⊆ C.        
-
+    Each outer box ``c \\in C`` is incident to the outer boxes
+    ``\\{outchd[xoutchd[c]], \\ldots, outchd[xoutchd[c + 1] - 1]\\} \\subseteq C``.
     """
     outchd::OutChd
 
     """
-    Each port p ∈ P has wire
-
-        wre[p] ∈ W.    
-
+    Each port ``p \\in P`` has wire ``wre[p] \\in W``.
     """
     wre::Wre
 
     """
-    Each outer port q ∈ Q has wire
-
-        outwre[q] ∈ W.
-
+    Each outer port ``q \\in Q`` has wire ``outwre[q] \\in W``.
     """
     outwre::OutWre
 
     """
-    Each wire w ∈ W has label
-
-        lbl[w] ∈ L.
-
+    Each wire ``w \\in W`` has label ``lbl[w] \\in L``.
     """
     lbl::Lbl
 
     """
-    Each port p ∈ P has label
-
-        prtlbl[p] ∈ L.
-
+    Each port ``p \\in P`` has label ``prtlbl[p] \\in L``.
     """
     prtlbl::PrtLbl
 
     """
-    Each outer port q ∈ Q has label
-
-        outprtlbl[q] ∈ L.
-
+    Each outer port ``q \\in Q`` has label ``outprtlbl[q] \\in L``.
     """
     outprtlbl::OutPrtLbl
 

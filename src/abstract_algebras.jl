@@ -1,25 +1,23 @@
 """
     AbstractAlgebra{A}
 
-A wiring diagram algebra a is a higher-order function that
-transforms each wiring diagram d into a multi-function
+A wiring diagram algebra ``a`` is a higher-order function that
+transforms each wiring diagram ``d`` into a function
 
-    a(d): X₁, ..., Xₙ → Y.
-
+```math
+a(d): X_1 \\times \\dots \\times X_n \\to Y.
+```
 """
 abstract type AbstractAlgebra{A} end
 
 """
-    AbstractAlgebra{A}
+    apply(algebra::AbstractAlgebra, diagram::AbstractWiringDiagram, arguments)
 
-Given a wiring diagram algebra a, a wiring diagram d, and
-a sequence
+Given a wiring diagram algebra ``a``, a wiring diagram ``d``, and
+a sequence ``(x_1, x_2, \\ldots, x_n)`` of arguments, compute ``y``:
 
-    (x₁, x₂, ..., xₙ)
-
-of arguments, compute y:
-
-    y = a(d)(x₁, x₂, ..., xₙ).
-
+```math
+y = a(d)(x_1, x_2, \\ldots, x_n).
+```
 """
 apply(algebra::AbstractAlgebra, diagram::AbstractWiringDiagram, arguments)

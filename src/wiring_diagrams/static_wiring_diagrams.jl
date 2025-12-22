@@ -1,3 +1,6 @@
+"""
+    StaticWiringDiagram{L, Prt, Wre, OutWre, Lbl, PrtLbl, OutPrtLbl} <: AbstractWiringDiagram{Int, L}
+"""
 struct StaticWiringDiagram{L, Prt, Wre, OutWre, Lbl, PrtLbl, OutPrtLbl} <: AbstractWiringDiagram{Int, L} end
 
 function StaticWiringDiagram(diagram::AbstractWiringDiagram{I, L}) where {I <: Integer, L}

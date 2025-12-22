@@ -13,13 +13,14 @@ using SparseArrays
 
 import AbstractTrees: parent
 
-export AbstractOperation, arity, domain, codomain, compose
+export AbstractOperation, arity, domain, codomain, compose, eachargument
 export AbstractWiringDiagram, nb, nw, np, nop, boxes, wires, wirelabels,
     ports, portwires, outports, outportwires, outportlabels, portlabels,
     label, wire, portlabel, outwire, outportlabel
 export AbstractDendrogram, nob, outboxes, outparent, separatorwidth, treewidth
 export AbstractAlgebra, apply
 export Workspace
+export Operation
 export WiringDiagram, DWiringDiagram, FWiringDiagram
 export StaticWiringDiagram
 export Dendrogram, DDendrogram, FDendrogram

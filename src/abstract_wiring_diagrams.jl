@@ -1,49 +1,56 @@
 """
     AbstractWiringDiagram{I, L} <: AbstractOperation{I, L}
 
-A labelled wiring diagram is a diagram in Set of the form
+A labelled wiring diagram is a diagram in ``\\text{Set}`` of the form
 
-    + --------------- +
-    |       B         |
-    |       ↑ box     |
-    |       P         |
-    | label ↓ wire    |
-    |   L ← W         |
-    |       ↑ outwire |
-    |       Q         |
-    + --------------- +
+```text
++ --------------- +
+|       B         |
+|       ↑ box     |
+|       P         |
+| label ↓ wire    |
+|   L ← W         |
+|       ↑ outwire |
+|       Q         |
++ --------------- +
+```
 
 where
 
-  - B is a set of boxes
-  - W is a set of wires
-  - P is a set of ports
-  - Q is a set of outer ports
-  - L is a set of labels
+  - ``B`` is a set of boxes
+  - ``W`` is a set of wires
+  - ``P`` is a set of ports
+  - ``Q`` is a set of outer ports
+  - ``L`` is a set of labels
 
-The sets B, W, P, and Q are contiguous sets of natural numbers
+The sets ``B``, ``W``, ``P``, and ``Q`` are contiguous sets of natural numbers
 
-  - B = {1, ..., |B|}
-  - W = {1, ..., |W|}
-  - P = {1, ..., |P|}
-  - Q = {1, ..., |Q|}
-  
-and the set L is an arbitrary Julia type like Symbol or Int. The
-function box: P → Q is monotonically increasing, so that for all
-boxes b ∈ B, the pre-image
+  - ``B = \\{1, \\ldots, |B|\\}``
+  - ``W = \\{1, \\ldots, |W|\\}``
+  - ``P = \\{1, \\ldots, |P|\\}``
+  - ``Q = \\{1, \\ldots, |Q|\\}``
 
-    box⁻¹(b) = {p ∈ P : box(p) = b} ⊆ P
+and the set ``L`` is an arbitrary Julia type like `Symbol` or `Int`. The
+function ``\\text{box}: P \\to B`` is monotonically increasing, so that for all
+boxes ``b \\in B``, the pre-image
+
+```math
+\\text{box}^{-1}(b) = \\{p \\in P : \\text{box}(p) = b\\} \\subseteq P
+```
 
 is a contiguous set of natural numbers
 
-    box⁻¹(b) = {p, ..., p + |box⁻¹(b)| - 1} ⊆ P.
+```math
+\\text{box}^{-1}(b) = \\{p, \\ldots, p + |\\text{box}^{-1}(b)| - 1\\} \\subseteq P.
+```
 
-Hence, there is a function port which maps each
-box b ∈ B and number 1 ≤ i ≤ |box⁻¹(b)| to the
+Hence, there is a function `port` which maps each
+box ``b \\in B`` and number ``1 \\leq i \\leq |\\text{box}^{-1}(b)|`` to the
 port
 
-    port(b, i) := p + i - 1 ∈ box⁻¹(b).
-
+```math
+\\text{port}(b, i) := p + i - 1 \\in \\text{box}^{-1}(b).
+```
 """
 abstract type AbstractWiringDiagram{I, L} <: AbstractOperation{I, L} end
 
@@ -135,18 +142,20 @@ end
 
 Get the number of boxes in a wiring diagram:
 
-    |B|.
-
+```math
+|B|.
+```
 """
 nb(diagram::AbstractWiringDiagram)
 
 """
     nw(diagram::AbstractWiringDiagram)
 
-Get the number of wires in a wiring diagram.
+Get the number of wires in a wiring diagram:
 
-    |W|.
-
+```math
+|W|.
+```
 """
 nw(diagram::AbstractWiringDiagram)
 
@@ -155,8 +164,9 @@ nw(diagram::AbstractWiringDiagram)
 
 Get the number of ports in a wiring diagram:
 
-    |P|.
-
+```math
+|P|.
+```
 """
 np(diagram::AbstractWiringDiagram)
 
@@ -165,8 +175,9 @@ np(diagram::AbstractWiringDiagram)
 
 Get the number of outer ports in a wiring diagram:
 
-    |Q|.
-
+```math
+|Q|.
+```
 """
 nop(diagram::AbstractWiringDiagram)
 
@@ -175,8 +186,9 @@ nop(diagram::AbstractWiringDiagram)
 
 Get the ordered set of boxes in a wiring diagram:
 
-    B.
-
+```math
+B.
+```
 """
 boxes(diagram::AbstractWiringDiagram)
 
@@ -185,18 +197,20 @@ boxes(diagram::AbstractWiringDiagram)
 
 Get the ordered set of wires in a wiring diagram:
 
-    W.
-
+```math
+W.
+```
 """
 wires(diagram::AbstractWiringDiagram)
 
 """
     wirelabels(diagram::AbstractWiringDiagram)
 
-Get the function W → L:
+Get the function ``W \\to L``:
 
-    wirelabels(w) := label(w)
-
+```math
+\\text{wirelabels}(w) := \\text{label}(w).
+```
 """
 wirelabels(diagram::AbstractWiringDiagram)
 
@@ -205,18 +219,20 @@ wirelabels(diagram::AbstractWiringDiagram)
 
 Get the ordered set of ports in a wiring diagram:
 
-    P.
-
+```math
+P.
+```
 """
 ports(diagram::AbstractWiringDiagram)
 
 """
     portwires(diagram::AbstractWiringDiagram)
 
-Get the function P → W:
+Get the function ``P \\to W``:
 
-    portwires(p) := wire(p)
-
+```math
+\\text{portwires}(p) := \\text{wire}(p).
+```
 """
 portwires(diagram::AbstractWiringDiagram)
 
@@ -225,118 +241,130 @@ portwires(diagram::AbstractWiringDiagram)
 
 Get the ordered set of outer ports in a wiring diagram:
 
-    Q.
-
+```math
+Q.
+```
 """
 outports(diagram::AbstractWiringDiagram)
 
 """
     outportwires(diagram::AbstractWiringDiagram)
 
-Get the function Q → W:
+Get the function ``Q \\to W``:
 
-    outportwires(q) := outwire(q)
-
+```math
+\\text{outportwires}(q) := \\text{outwire}(q).
+```
 """
 outportwires(diagram::AbstractWiringDiagram)
 
 """
-    outlabels(diagram::AbstractWiringDiagram)
+    outportlabels(diagram::AbstractWiringDiagram)
 
-Get the composite function Q → L:
+Get the composite function ``Q \\to L``:
 
-    outlabels(q) := label(outwire(q))
-
+```math
+\\text{outportlabels}(q) := \\text{label}(\\text{outwire}(q)).
+```
 """
 outportlabels(diagram::AbstractWiringDiagram)
 
 """
     np(diagram::AbstractWiringDiagram, b::Integer)
 
-Get the size of the preimage box⁻¹(b) ⊆ P:
+Get the size of the preimage ``\\text{box}^{-1}(b) \\subseteq P``:
 
-    | {p ∈ P : box(p) = b} |.
-
+```math
+|\\{p \\in P : \\text{box}(p) = b\\}|.
+```
 """
 np(diagram::AbstractWiringDiagram, b::Integer)
 
 """
     ports(diagram::AbstractWiringDiagram, b::Integer)
 
-Get the ordered preimage box⁻¹(b) ⊆ P:
+Get the ordered preimage ``\\text{box}^{-1}(b) \\subseteq P``:
 
-    {p ∈ P : box(p) = b} ⊆ P.
-
+```math
+\\{p \\in P : \\text{box}(p) = b\\} \\subseteq P.
+```
 """
 ports(diagram::AbstractWiringDiagram, b::Integer)
 
 """
     portwires(diagram::AbstractWiringDiagram, b::Integer)
 
-Get the composite function {1, ..., |box⁻¹(b)|} → W:
+Get the composite function ``\\{1, \\ldots, |\\text{box}^{-1}(b)|\\} \\to W``:
 
-    portwires(i) := wire(port(b, i)).
-
+```math
+\\text{portwires}(i) := \\text{wire}(\\text{port}(b, i)).
+```
 """
 portwires(diagram::AbstractWiringDiagram, b::Integer)
 
 """
     portlabels(diagram::AbstractWiringDiagram, b::Integer)
 
-Get the composite function {1, ..., |box⁻¹(b)|} → L:
+Get the composite function ``\\{1, \\ldots, |\\text{box}^{-1}(b)|\\} \\to L``:
 
-    portlabels(i) := label(wire(port(b, i))).
-
+```math
+\\text{portlabels}(i) := \\text{label}(\\text{wire}(\\text{port}(b, i))).
+```
 """
 portlabels(diagram::AbstractWiringDiagram, b::Integer)
 
 """
     label(diagram::AbstractWiringDiagram, w::Integer)
 
-Get the label of a wire w ∈ W:
+Get the label of a wire ``w \\in W``:
 
-    label(w) ∈ L.
-
+```math
+\\text{label}(w) \\in L.
+```
 """
 label(diagram::AbstractWiringDiagram, w::Integer)
 
 """
     wire(diagram::AbstractWiringDiagram, p::Integer)
 
-Get the wire of a port p ∈ P:
+Get the wire of a port ``p \\in P``:
 
-    wire(p) ∈ W.
-
+```math
+\\text{wire}(p) \\in W.
+```
 """
 wire(diagram::AbstractWiringDiagram, p::Integer)
 
 """
     portlabel(diagram::AbstractWiringDiagram, p::Integer)
 
-Get the label of the wire of a port p ∈ P:
+Get the label of the wire of a port ``p \\in P``:
 
-    label(wire(p)) ∈ L.
-
+```math
+\\text{label}(\\text{wire}(p)) \\in L.
+```
 """
 portlabel(diagram::AbstractWiringDiagram, p::Integer)
 
 """
     outwire(diagram::AbstractWiringDiagram, q::Integer)
 
-Get the wire of an outer port q ∈ O:
+Get the wire of an outer port ``q \\in Q``:
 
-    outwire(q) ∈ W.
-
+```math
+\\text{outwire}(q) \\in W.
+```
 """
 outwire(diagram::AbstractWiringDiagram, q::Integer)
 
 """
     outportlabel(diagram::AbstractWiringDiagram, q::Integer)
 
-Get the label of the wire of an outer port q ∈ Q:
+Get the label of the wire of an outer port ``q \\in Q``:
 
-    label(outwire(q)) ∈ L.
-
+```math
+\\text{label}(\\text{outwire}(q)) \\in L.
+```
 """
 outportlabel(diagram::AbstractWiringDiagram, q::Integer)
 

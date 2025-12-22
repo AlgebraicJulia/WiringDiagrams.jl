@@ -1,6 +1,6 @@
-#=
-using WiringDiagrams
+using AbstractTrees
 using Documenter
+using WiringDiagrams
 
 makedocs(;
     modules = [WiringDiagrams],
@@ -13,4 +13,3 @@ makedocs(;
 deploydocs(;
     target = "build", repo = "github.com/AlgebraicJulia/WiringDiagrams.jl.git", branch = "gh-pages"
 )
-=#

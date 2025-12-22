@@ -65,10 +65,10 @@ arity(operation::AbstractOperation)
     eachargument(operation::AbstractOperation)
 
 Get the ordered set
-
-    {1, ..., n} ⊆ ℕ
-
-where n is the arity of the operation.
+```math
+\\{1, \\ldots, n\\} \\subseteq \\mathbb{N}
+```
+where ``n`` is the arity of the operation.
 """
 eachargument(operation::AbstractOperation)
 
@@ -88,7 +88,7 @@ end
 """
     domain(operation::AbstractOperation, i::Integer)
 
-Get the ith element of the domain of an operation.
+Get the ``i``th element of the domain of an operation.
 """
 domain(operation::AbstractOperation, i::Integer)
 
@@ -124,28 +124,33 @@ end
 
 Given operations
 
-    inner: (A₁, …, Aₘ) → Bᵢ
-    outer: (B₁, …, Bₙ) → C
+  - ``\\text{inner}: (A_1, \\ldots, A_m) \\to B_i``
+  - ``\\text{outer}: (B_1, \\ldots, B_n) \\to C``
 
 form the composite operation
 
-    outer ∘ᵢ inner: (B₁, …, Bᵢ₋₁, A₁, …, Aₘ, Bᵢ₊₁, …, Bₙ) → C 
+```math
+\\text{outer} \\circ_i \\text{inner}: (B_1, \\ldots, B_{i-1}, A_1, \\ldots, A_m, B_{i+1}, \\ldots, B_n) \\to C
+```
 
 given by the following string diagram:
 
-                      ┌───────┐
-    B₁ ───────────────│       │
-     ⋮                │       │
-    Bᵢ₋₁ ─────────────│       │
-          ┌───────┐   │       │
-    A₁ ───│       │ Bᵢ│       │
-     ⋮    │ inner │───│ outer │─── C
-    Aₘ ───│       │   │       │
-          └───────┘   │       │
-    Bᵢ₊₁ ─────────────│       │
-     ⋮                │       │
-    Bₙ ───────────────│       │
-                      └───────┘
-
+```text
++ -------------------------------- +
+|                   ┌───────┐      |
+| B_1 ──────────────│       │      |
+|  ⋮                │       │      |
+| B_{i-1} ──────────│       │      |
+|       ┌───────┐   │       │      |
+| A_1 ──│       │B_i│       │      |
+|  ⋮    │ inner │───│ outer │─── C |
+| A_m ──│       │   │       │      |
+|       └───────┘   │       │      |
+| B_{i+1} ──────────│       │      |
+|  ⋮                │       │      |
+| B_n ──────────────│       │      |
+|                   └───────┘      |
++--------------------------------- +
+```
 """
 compose(i::Integer, outer::AbstractOperation, inner::AbstractOperation)

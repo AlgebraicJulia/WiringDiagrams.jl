@@ -1,15 +1,19 @@
 """
     Operation{I, L, Alg, Dgm} <: AbstractOperation{I, L}
 
-A multi-function
+A function
 
-    f: X₁, X₂, ..., Xₙ → Y
+```math
+f: X_1 \\times \\dots \\times X_n \\to Y
+```
 
 of the form
 
-    f(x₁, x₂, ..., xₙ) = a(d)(x₁, x₂, ..., xₙ)
+```math
+f(x_1, x_2, \\ldots, x_n) = a(d)(x_1, x_2, \\ldots, x_n)
+```
 
-for some wiring diagram algebra a and wiring diagram d.
+for some wiring diagram algebra ``a`` and wiring diagram ``d``.
 """
 struct Operation{I, L, Alg <: AbstractAlgebra, Dgm <: Union{AbstractWiringDiagram{I, L}, AbstractDendrogram{I, L}}} <: AbstractOperation{I, L}
     algebra::Alg

@@ -1,82 +1,88 @@
 """
     AbstractDendrogram{I, L}
 
-A labelled dendrogram is a commutative dendrogram in Set of the form
+A labelled dendrogram is a commutative diagram in ``\\text{Set}`` of the form
 
-    + -------------------- +
-    |         L label      |
-    |    wire ↑ outbox     |
-    |     P → W ← Q        |
-    | box ↓   ↓   ↓ outbox |
-    |     B → C ← C        |
-    |  parent  outparent   |
-    + -------------------- +
+```text
++ -------------------- +
+|         L label      |
+|    wire ↑ outbox     |
+|     P → W ← Q        |
+| box ↓   ↓   ↓ outbox |
+|     B → C ← C        |
+|  parent  outparent   |
++ -------------------- +
+```
 
 where
 
-  - B is a set of boxes
-  - C is a set of outer boxes
-  - W is a set of wires
-  - P is a set of ports
-  - Q is a set of outer ports
-  - L is a set of labels
+  - ``B`` is a set of boxes
+  - ``C`` is a set of outer boxes
+  - ``W`` is a set of wires
+  - ``P`` is a set of ports
+  - ``Q`` is a set of outer ports
+  - ``L`` is a set of labels
 
-The functions parent and outparent define a rooted tree
-with leaves B and branches C.
+The functions `parent` and `outparent` define a rooted tree
+with leaves ``B`` and branches ``C``.
 
-    + --------------- +
-    |         c       |
-    |         ↓       |
-    |         c       |
-    |       ↙ ↓  ↘    |
-    |     c   c    b  |
-    |   ↙   ↘   ↘     |
-    |  b     b    b   |
-    + --------------- +
+```text
++ --------------- +
+|         c       |
+|         ↓       |
+|         c       |
+|       ↙ ↓  ↘    |
+|     c   c    b  |
+|   ↙   ↘   ↘     |
+|  b     b    b   |
++ --------------- +
+```
 
-The sets B, C, W, P, and Q are contiguous sets of natural numbers
+The sets ``B``, ``C``, ``W``, ``P``, and ``Q`` are contiguous sets of natural numbers
 
-  - B = {1, ..., |B|}
-  - C = {1, ..., |C|}
-  - W = {1, ..., |W|}
-  - P = {1, ..., |P|}
-  - Q = {1, ..., |Q|}
+  - ``B = \\{1, \\ldots, |B|\\}``
+  - ``C = \\{1, \\ldots, |C|\\}``
+  - ``W = \\{1, \\ldots, |W|\\}``
+  - ``P = \\{1, \\ldots, |P|\\}``
+  - ``Q = \\{1, \\ldots, |Q|\\}``
 
-and the set L is an arbitrary Julia type like Symbol or Int. The functions
+and the set ``L`` is an arbitrary Julia type like `Symbol` or `Int`. The functions
 
-  - box: P → B
-  - outbox: Q → C
-  - wirebox: W → C
+  - ``\\text{box}: P \\to B``
+  - ``\\text{outbox}: Q \\to C``
+  - ``\\text{wirebox}: W \\to C``
 
-are monotonically increasing, to that for all boxes b ∈ B and outer boxes
-c ∈ C, the pre-images
+are monotonically increasing, so that for all boxes ``b \\in B`` and outer boxes
+``c \\in C``, the pre-images
 
-  - box⁻¹(b) = {p ∈ P : box(p) = b} ⊆ P
-  - outbox⁻¹(c) = {q ∈ Q : outbox(q) = c} ⊆ Q 
-  - wirebox⁻¹(c) = {w ∈ W : wirebox(w) = c} ⊆ W
+  - ``\\text{box}^{-1}(b) = \\{p \\in P : \\text{box}(p) = b\\} \\subseteq P``
+  - ``\\text{outbox}^{-1}(c) = \\{q \\in Q : \\text{outbox}(q) = c\\} \\subseteq Q``
+  - ``\\text{wirebox}^{-1}(c) = \\{w \\in W : \\text{wirebox}(w) = c\\} \\subseteq W``
 
-are contiguos sets of natural numbers:
+are contiguous sets of natural numbers:
 
-  - box⁻¹(b) = {p, ..., p + |box⁻¹(b)| - 1} ⊆ P
-  - outbox⁻¹(c) = {q, ..., q + |outbox⁻¹(c)| - 1} ⊆ Q
-  - wirebox⁻¹(c) = {w, ..., w + |wirebox⁻¹(c)| - 1} ⊆ W
+  - ``\\text{box}^{-1}(b) = \\{p, \\ldots, p + |\\text{box}^{-1}(b)| - 1\\} \\subseteq P``
+  - ``\\text{outbox}^{-1}(c) = \\{q, \\ldots, q + |\\text{outbox}^{-1}(c)| - 1\\} \\subseteq Q``
+  - ``\\text{wirebox}^{-1}(c) = \\{w, \\ldots, w + |\\text{wirebox}^{-1}(c)| - 1\\} \\subseteq W``
 
-Hence, there are functions port, outport, and boxwire
-which map each box b ∈ B, outer box c ∈ C, and numbers
+Hence, there are functions `port`, `outport`, and `boxwire`
+which map each box ``b \\in B``, outer box ``c \\in C``, and numbers
 
-  - 1 ≤ i ≤ |box⁻¹(b)|
-  - 1 ≤ j ≤ |outbox⁻¹(c)|
-  - 1 ≤ k ≤ |wirebox⁻¹(c)|
+  - ``1 \\leq i \\leq |\\text{box}^{-1}(b)|``
+  - ``1 \\leq j \\leq |\\text{outbox}^{-1}(c)|``
+  - ``1 \\leq k \\leq |\\text{wirebox}^{-1}(c)|``
 
 to the objects
 
-  - port(b, i) := p + i - 1 ∈ box⁻¹(b)
-  - outport(q, j) := q + j - 1 ∈ outbox⁻¹(c)
-  - boxwire(w, k) := w + k - 1 ∈ wirebox⁻¹(c)
-
+  - ``\\text{port}(b, i) := p + i - 1 \\in \\text{box}^{-1}(b)``
+  - ``\\text{outport}(c, j) := q + j - 1 \\in \\text{outbox}^{-1}(c)``
+  - ``\\text{boxwire}(c, k) := w + k - 1 \\in \\text{wirebox}^{-1}(c)``
 """
 abstract type AbstractDendrogram{I, L} <: AbstractOperation{I, L} end
 
+"""
+    treewidth([f::Function,] dendrogram::AbstractDendrogram)
+"""
 function CliqueTrees.treewidth(dendrogram::AbstractDendrogram)
     return treewidth(uniformweight, dendrogram)
 end
@@ -107,6 +113,9 @@ function CliqueTrees.treewidth(f::Function, dendrogram::AbstractDendrogram)
     return maxwidth
 end
 
+"""
+    separatorwidth([f::Function,] dendrogram::AbstractDendrogram)
+"""
 function CliqueTrees.separatorwidth(dendrogram::AbstractDendrogram)
     return separatorwidth(uniformweight, dendrogram)
 end
@@ -194,8 +203,9 @@ end
 
 Get the number of boxes in a dendrogram:
 
-    |B|.
-
+```math
+|B|.
+```
 """
 nb(dendrogram::AbstractDendrogram)
 
@@ -204,8 +214,9 @@ nb(dendrogram::AbstractDendrogram)
 
 Get the number of outer boxes in a dendrogram:
 
-    |C|.
-
+```math
+|C|.
+```
 """
 nob(dendrogram::AbstractDendrogram)
 
@@ -214,8 +225,9 @@ nob(dendrogram::AbstractDendrogram)
 
 Get the number of wires in a dendrogram:
 
-    |W|.
-
+```math
+|W|.
+```
 """
 nw(dendrogram::AbstractDendrogram)
 
@@ -224,8 +236,9 @@ nw(dendrogram::AbstractDendrogram)
 
 Get the number of ports in a dendrogram:
 
-    |P|.
-
+```math
+|P|.
+```
 """
 np(dendrogram::AbstractDendrogram)
 
@@ -234,8 +247,9 @@ np(dendrogram::AbstractDendrogram)
 
 Get the number of outer ports in a dendrogram:
 
-    |Q|.
-
+```math
+|Q|.
+```
 """
 nop(dendrogram::AbstractDendrogram)
 
@@ -244,18 +258,20 @@ nop(dendrogram::AbstractDendrogram)
 
 Get the ordered set of boxes in a dendrogram:
 
-    B.
-
+```math
+B.
+```
 """
 boxes(dendrogram::AbstractDendrogram)
 
 """
     outboxes(dendrogram::AbstractDendrogram)
 
-Get the orderd set of outer boxes in a dendrogram:
+Get the ordered set of outer boxes in a dendrogram:
 
-    C.
-
+```math
+C.
+```
 """
 outboxes(dendrogram::AbstractDendrogram)
 
@@ -264,17 +280,20 @@ outboxes(dendrogram::AbstractDendrogram)
 
 Get the ordered set of wires in a dendrogram:
 
-    W.
+```math
+W.
+```
 """
 wires(dendrogram::AbstractDendrogram)
 
 """
     wirelabels(dendrogram::AbstractDendrogram)
 
-Get the function of W → L:
+Get the function ``W \\to L``:
 
-    wirelabels(w) := label(w).
-
+```math
+\\text{wirelabels}(w) := \\text{label}(w).
+```
 """
 wirelabels(dendrogram::AbstractDendrogram)
 
@@ -283,8 +302,9 @@ wirelabels(dendrogram::AbstractDendrogram)
 
 Get the ordered set of ports in a dendrogram:
 
-   P.
-
+```math
+P.
+```
 """
 ports(dendrogram::AbstractDendrogram)
 
@@ -293,227 +313,250 @@ ports(dendrogram::AbstractDendrogram)
 
 Get the ordered set of outer ports in a dendrogram:
 
-    Q.
-
+```math
+Q.
+```
 """
 outports(dendrogram::AbstractDendrogram)
 
 """
-    ports(dendrogram::AbstractDendrogram, b::Integer)
+    np(dendrogram::AbstractDendrogram, b::Integer)
 
-Get the size of the pre-image box⁻¹(b) ⊆ P:
+Get the size of the pre-image ``\\text{box}^{-1}(b) \\subseteq P``:
 
-    | {p ∈ P : box(p) = b} |.
-
+```math
+|\\{p \\in P : \\text{box}(p) = b\\}|.
+```
 """
 np(dendrogram::AbstractDendrogram, b::Integer)
 
 """
     ports(dendrogram::AbstractDendrogram, b::Integer)
 
-Get the ordered pre-image box⁻¹(b) ⊆ P:
+Get the ordered pre-image ``\\text{box}^{-1}(b) \\subseteq P``:
 
-    {p ∈ P : box(p) = b} ⊆ P.
-
+```math
+\\{p \\in P : \\text{box}(p) = b\\} \\subseteq P.
+```
 """
 ports(dendrogram::AbstractDendrogram, b::Integer)
 
 """
     portwires(dendrogram::AbstractDendrogram, b::Integer)
 
-Get the composite function {1, ..., |box⁻¹(b)|} → W:
+Get the composite function ``\\{1, \\ldots, |\\text{box}^{-1}(b)|\\} \\to W``:
 
-    portwires(i) := wire(port(b, i)).
-
+```math
+\\text{portwires}(i) := \\text{wire}(\\text{port}(b, i)).
+```
 """
 portwires(dendrogram::AbstractDendrogram, b::Integer)
 
 """
     portlabels(dendrogram::AbstractDendrogram, b::Integer)
 
-Get the composite function {1, ..., |box⁻¹(b)|} → L:
+Get the composite function ``\\{1, \\ldots, |\\text{box}^{-1}(b)|\\} \\to L``:
 
-    portlabels(i) := label(wire(port(b, i))).
-
+```math
+\\text{portlabels}(i) := \\text{label}(\\text{wire}(\\text{port}(b, i))).
+```
 """
 portlabels(dendrogram::AbstractDendrogram, b::Integer)
 
 """
-    parent(dendrogram::AbstractDendrogram)
+    parent(dendrogram::AbstractDendrogram, b::Integer)
 
-Get the parent of a box b ∈ B:
+Get the parent of a box ``b \\in B``:
 
-    parent(b) ∈ C.
-
+```math
+\\text{parent}(b) \\in C.
+```
 """
 parent(dendrogram::AbstractDendrogram, b::Integer)
 
 """
     nop(dendrogram::AbstractDendrogram, c::Integer)
 
-Get the size of the pre-image outbox⁻¹(c) ⊆ Q:
+Get the size of the pre-image ``\\text{outbox}^{-1}(c) \\subseteq Q``:
 
-    | {q ∈ Q : outbox(q) = c} |.
-
+```math
+|\\{q \\in Q : \\text{outbox}(q) = c\\}|.
+```
 """
 nop(dendrogram::AbstractDendrogram, c::Integer)
 
 """
     outports(dendrogram::AbstractDendrogram, c::Integer)
 
-Get the ordered pre-image outbox⁻¹(c) ⊆ Q:
+Get the ordered pre-image ``\\text{outbox}^{-1}(c) \\subseteq Q``:
 
-    {q ∈ Q : outbox(q) = c} ⊆ Q.
-
+```math
+\\{q \\in Q : \\text{outbox}(q) = c\\} \\subseteq Q.
+```
 """
 outports(dendrogram::AbstractDendrogram, c::Integer)
 
 """
     outportwires(dendrogram::AbstractDendrogram, c::Integer)
 
-Get the composite function {1, ..., |outbox⁻¹(c)|} → W:
+Get the composite function ``\\{1, \\ldots, |\\text{outbox}^{-1}(c)|\\} \\to W``:
 
-    outportwires(i) := outwire(outport(c, i)).
-
+```math
+\\text{outportwires}(i) := \\text{outwire}(\\text{outport}(c, i)).
+```
 """
 outportwires(dendrogram::AbstractDendrogram, c::Integer)
 
 """
     outportlabels(dendrogram::AbstractDendrogram, c::Integer)
 
-Get the composite function {1, ..., |outbox⁻¹(c)|} → L:
+Get the composite function ``\\{1, \\ldots, |\\text{outbox}^{-1}(c)|\\} \\to L``:
 
-    outportlabels(i) := label(outwire(outport(c, i))).
-
+```math
+\\text{outportlabels}(i) := \\text{label}(\\text{outwire}(\\text{outport}(c, i))).
+```
 """
 outportlabels(dendrogram::AbstractDendrogram, c::Integer)
 
 """
     outparent(dendrogram::AbstractDendrogram, c::Integer)
 
-Get the parent of an outer box c ∈ C:
+Get the parent of an outer box ``c \\in C``:
 
-    outparent(c) ∈ C.
-
+```math
+\\text{outparent}(c) \\in C.
+```
 """
 outparent(dendrogram::AbstractDendrogram, c::Integer)
 
 """
     nb(dendrogram::AbstractDendrogram, c::Integer)
 
-Get the size of the pre-image parent⁻¹(c) ⊆ B:
+Get the size of the pre-image ``\\text{parent}^{-1}(c) \\subseteq B``:
 
-    | {b ∈ B : parent(b) = c} |.
-
+```math
+|\\{b \\in B : \\text{parent}(b) = c\\}|.
+```
 """
 nb(dendrogram::AbstractDendrogram, c::Integer)
 
 """
     boxes(dendrogram::AbstractDendrogram, c::Integer)
 
-Get the ordered pre-image parent⁻¹(c) ⊆ B:
+Get the ordered pre-image ``\\text{parent}^{-1}(c) \\subseteq B``:
 
-    {b ∈ B : parent(b) = c} ⊆ B.
-
+```math
+\\{b \\in B : \\text{parent}(b) = c\\} \\subseteq B.
+```
 """
 boxes(dendrogram::AbstractDendrogram, c::Integer)
 
 """
     nob(dendrogram::AbstractDendrogram, c::Integer)
 
-Get the size of the pre-image outparent⁻¹(c) ⊆ C:
+Get the size of the pre-image ``\\text{outparent}^{-1}(c) \\subseteq C``:
 
-    | {cc ∈ C : outparent(cc) = c} |.
-
+```math
+|\\{c' \\in C : \\text{outparent}(c') = c\\}|.
+```
 """
 nob(dendrogram::AbstractDendrogram, c::Integer)
 
 """
     outboxes(dendrogram::AbstractDendrogram, c::Integer)
 
-Get the ordered pre-image outparent⁻¹(c) ⊆ C:
+Get the ordered pre-image ``\\text{outparent}^{-1}(c) \\subseteq C``:
 
-    {cc ∈ C : outparent(cc) = c} ⊆ C.
-
+```math
+\\{c' \\in C : \\text{outparent}(c') = c\\} \\subseteq C.
+```
 """
 outboxes(dendrogram::AbstractDendrogram, c::Integer)
 
 """
     nw(dendrogram::AbstractDendrogram, c::Integer)
 
-Get the size of the pre-image wirebox⁻¹(c) ⊆ W:
+Get the size of the pre-image ``\\text{wirebox}^{-1}(c) \\subseteq W``:
 
-    | {w ∈ W : wirebox(w) = c} |.
-
+```math
+|\\{w \\in W : \\text{wirebox}(w) = c\\}|.
+```
 """
 nw(dendrogram::AbstractDendrogram, c::Integer)
 
 """
     wires(dendrogram::AbstractDendrogram, c::Integer)
 
-Get the ordered pre-image wirebox⁻¹(c) ⊆ W:
+Get the ordered pre-image ``\\text{wirebox}^{-1}(c) \\subseteq W``:
 
-    {w ∈ W : wirebox(w) = c} ⊆ W.
-
+```math
+\\{w \\in W : \\text{wirebox}(w) = c\\} \\subseteq W.
+```
 """
 wires(dendrogram::AbstractDendrogram, c::Integer)
 
 """
     wirelabels(dendrogram::AbstractDendrogram, c::Integer)
 
-Get the composite function {1, ..., |wirebox⁻¹(c)|} → L:
+Get the composite function ``\\{1, \\ldots, |\\text{wirebox}^{-1}(c)|\\} \\to L``:
 
-    wirelabels(i) := label(boxwire(c, i))
-
+```math
+\\text{wirelabels}(i) := \\text{label}(\\text{boxwire}(c, i)).
+```
 """
 wirelabels(dendrogram::AbstractDendrogram, c::Integer)
 
 """
     label(dendrogram::AbstractDendrogram, w::Integer)
 
-Get the label of a wire w ∈ W:
+Get the label of a wire ``w \\in W``:
 
-    label(w) ∈ L.
-
+```math
+\\text{label}(w) \\in L.
+```
 """
 label(dendrogram::AbstractDendrogram, w::Integer)
 
 """
     wire(dendrogram::AbstractDendrogram, p::Integer)
 
-Get the wire of a port p ∈ P:
+Get the wire of a port ``p \\in P``:
 
-    wire(p) ∈ W.
-
+```math
+\\text{wire}(p) \\in W.
+```
 """
 wire(dendrogram::AbstractDendrogram, p::Integer)
 
 """
     portlabel(dendrogram::AbstractDendrogram, p::Integer)
 
-Get the label of the wire of a port p ∈ P:
+Get the label of the wire of a port ``p \\in P``:
 
-    label(wire(p)) ∈ L.
-
+```math
+\\text{label}(\\text{wire}(p)) \\in L.
+```
 """
 portlabel(dendrogram::AbstractDendrogram, p::Integer)
 
 """
     outwire(dendrogram::AbstractDendrogram, q::Integer)
 
-Get the wire of an outer port q ∈ O:
+Get the wire of an outer port ``q \\in Q``:
 
-    outwire(q) ∈ W.
-
+```math
+\\text{outwire}(q) \\in W.
+```
 """
 outwire(dendrogram::AbstractDendrogram, q::Integer)
 
 """
     outportlabel(dendrogram::AbstractDendrogram, q::Integer)
 
-Get the label of the wire of an outer port q ∈ Q:
+Get the label of the wire of an outer port ``q \\in Q``:
 
-    label(outwire(q)) ∈ L.
-
+```math
+\\text{label}(\\text{outwire}(q)) \\in L.
+```
 """
 outportlabel(dendrogram::AbstractDendrogram, q::Integer)
