@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>WiringDiagrams.jl · WiringDiagrams.jl</title><meta name="title" content="WiringDiagrams.jl · WiringDiagrams.jl"/><meta property="og:title" content="WiringDiagrams.jl · WiringDiagrams.jl"/><meta property="twitter:title" content="WiringDiagrams.jl · WiringDiagrams.jl"/><meta name="description" content="Documentation for WiringDiagrams.jl."/><meta property="og:description" content="Documentation for WiringDiagrams.jl."/><meta property="twitter:description" content="Documentation for WiringDiagrams.jl."/><script data-outdated-warner src="assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="assets/documenter.js"></script><script src="search_index.js"></script><script src="siteinfo.js"></script><script src="../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href>WiringDiagrams.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li class="is-active"><a class="tocitem" href>WiringDiagrams.jl</a><ul class="internal"><li><a class="tocitem" href="#Wiring-Diagrams"><span>Wiring Diagrams</span></a></li><li><a class="tocitem" href="#Dendrograms"><span>Dendrograms</span></a></li><li><a class="tocitem" href="#Algebras"><span>Algebras</span></a></li></ul></li><li><a class="tocitem" href="api/">Library Reference</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>WiringDiagrams.jl</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>WiringDiagrams.jl</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/AlgebraicJulia/WiringDiagrams.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/AlgebraicJulia/WiringDiagrams.jl/blob/main/docs/src/index.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="WiringDiagrams.jl"><a class="docs-heading-anchor" href="#WiringDiagrams.jl">WiringDiagrams.jl</a><a id="WiringDiagrams.jl-1"></a><a class="docs-heading-anchor-permalink" href="#WiringDiagrams.jl" title="Permalink"></a></h1><p>WiringDiagrams.jl is a high-performance Julia library for working with wiring diagrams and their algebras.</p><h2 id="Wiring-Diagrams"><a class="docs-heading-anchor" href="#Wiring-Diagrams">Wiring Diagrams</a><a id="Wiring-Diagrams-1"></a><a class="docs-heading-anchor-permalink" href="#Wiring-Diagrams" title="Permalink"></a></h2><p>A wiring diagram is a combinatorial representation of a class of functions. For example, consider the diagram <span>$d$</span> shown below.</p><p><img src="assets/diagram-1.svg" alt/></p><p>This diagram could represent the projected intersection of relations</p><p class="math-container">\[    D := \{i : (i, j, k) ∈ A \text{ and } (k, l) ∈ B \text{ and } (l, j) ∈ C\}\]</p><p>... or the summed product of arrays</p><p class="math-container">\[    D_i := \sum_j \sum_k \sum_l A_{ijk} \times B_{kl} \times C_{lj}\]</p><p>... or the infimized sum of convex functions</p><p class="math-container">\[    D(i) := \inf_j \inf_k \inf_l A(i, j, k) + B(k, l) + C(l, j)\]</p><p>and so on and so forth. Each of these different interetations is specified by a <em>wiring diagram algebra</em>. Algebras are higher-order functions that transform wiring diagrams into functions. For any algebra <span>$a$</span>, we can write</p><p class="math-container">\[    D := a(d)(A, B, C).\]</p><h3 id="Example"><a class="docs-heading-anchor" href="#Example">Example</a><a id="Example-1"></a><a class="docs-heading-anchor-permalink" href="#Example" title="Permalink"></a></h3><pre><code class="language-julia-repl hljs">julia&gt; using OMEinsum, WiringDiagrams
+
+julia&gt; A = rand(2, 3, 4); B = rand(4, 5); C = rand(5, 3);
+
+julia&gt; d = WiringDiagram(
+           [[&#39;i&#39;, &#39;j&#39;, &#39;k&#39;], [&#39;k&#39;, &#39;l&#39;], [&#39;l&#39;, &#39;j&#39;]],
+           [&#39;i&#39;],
+           Dict(&#39;i&#39; =&gt; 2, &#39;j&#39; =&gt; 3, &#39;k&#39; =&gt; 4, &#39;l&#39; =&gt; 5),
+       )
+3-box FWiringDiagram{Int64, Int64}:
+ [2]
+ └─ [2, 3, 4]
+ └─ [4, 5]
+ └─ [5, 3]
+
+julia&gt; a = ArrayAlgebra{Array{Float64}}()
+ArrayAlgebra{Array{Float64}}()
+
+julia&gt; D = a(d)(A, B, C)
+2-element Vector{Float64}:
+4.765630333539594
+6.775309980242036</code></pre><h2 id="Dendrograms"><a class="docs-heading-anchor" href="#Dendrograms">Dendrograms</a><a id="Dendrograms-1"></a><a class="docs-heading-anchor-permalink" href="#Dendrograms" title="Permalink"></a></h2><p>Applying algebras to large wiring diagrams can be expensive. Consider the diagram <span>$d$</span> shown below.</p><p><img src="assets/diagram-2.svg" alt/></p><p>If each index has ten dimensions, then this tensor contraction requres <span>$10^{10}$</span> floating point operations. We can address this problem by <em>factorizing</em> this wiring diagram into a tree of smaller wiring diagrams. The resulting object is called a dendrogram.</p><h3 id="Example-2"><a class="docs-heading-anchor" href="#Example-2">Example</a><a class="docs-heading-anchor-permalink" href="#Example-2" title="Permalink"></a></h3><pre><code class="language-julia-repl hljs">julia&gt; OMEinsum, WiringDiagrams
+
+julia&gt; A = 0.1rand(10, 10, 10); B = 0.1rand(10, 10, 10); C = 0.1rand(10, 10, 10);
+
+julia&gt; D = 0.1rand(10, 10, 10); E = 0.1rand(10, 10, 10); F = 0.1rand(10, 10, 10);
+
+julia&gt; d = WiringDiagram(
+           [[&#39;i&#39;, &#39;j&#39;, &#39;k&#39;], [&#39;j&#39;, &#39;l&#39;, &#39;m&#39;], [&#39;k&#39;, &#39;l&#39;, &#39;n&#39;],
+            [&#39;m&#39;, &#39;o&#39;, &#39;p&#39;], [&#39;n&#39;, &#39;o&#39;, &#39;q&#39;], [&#39;p&#39;, &#39;q&#39;, &#39;r&#39;]],
+           [&#39;i&#39;, &#39;r&#39;],
+           Dict(&#39;i&#39; =&gt; 10, &#39;j&#39; =&gt; 10, &#39;k&#39; =&gt; 10, &#39;l&#39; =&gt; 10, &#39;m&#39; =&gt; 10,
+                &#39;n&#39; =&gt; 10, &#39;o&#39; =&gt; 10, &#39;p&#39; =&gt; 10, &#39;q&#39; =&gt; 10, &#39;r&#39; =&gt; 10),
+       )
+6-box FWiringDiagram{Int64, Int64}:
+ [10, 10]
+ └─ [10, 10, 10]
+ └─ [10, 10, 10]
+ └─ [10, 10, 10]
+ └─ [10, 10, 10]
+ └─ [10, 10, 10]
+ └─ [10, 10, 10]
+
+julia&gt; a = ArrayAlgebra{Array{Float64}}()
+ArrayAlgebra{Array{Float64}}()
+
+julia&gt; @time G = a(d)(A, B, C, D, E, F);
+ 15.653926 seconds (74 allocations: 4.812 KiB)
+
+julia&gt; f = Dendrogram(log2, d)
+6-box FDendrogram{Int64, Int64}:
+ [10, 10]
+ └─ [10, 10, 10]
+ └─ [10, 10, 10]
+ └─ [10, 10, 10]
+ └─ [10, 10, 10]
+ └─ [10, 10, 10]
+ └─ [10, 10, 10]
+
+julia&gt; @time G = a(f)(A, B, C, D, E, F);
+  0.000269 seconds (979 allocations: 683.359 KiB)</code></pre><h2 id="Algebras"><a class="docs-heading-anchor" href="#Algebras">Algebras</a><a id="Algebras-1"></a><a class="docs-heading-anchor-permalink" href="#Algebras" title="Permalink"></a></h2><p>In order to define a wiring diagram algebra, create a concrete subtype of <code>AbstractAlgebra</code></p><pre><code class="language-julia hljs">struct MyAlgebra{A} &lt;: AbstractAlgebra{A} end</code></pre><p>and define a method for the function <code>apply</code>.</p></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="api/">Library Reference »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.16.1 on <span class="colophon-date" title="Thursday 25 December 2025 23:40">Thursday 25 December 2025</span>. Using Julia version 1.12.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
