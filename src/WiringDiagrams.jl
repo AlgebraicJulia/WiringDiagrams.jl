@@ -25,7 +25,6 @@ export WiringDiagram, DWiringDiagram, FWiringDiagram
 export StaticWiringDiagram
 export Dendrogram, DDendrogram, FDendrogram
 export ArrayAlgebra
-export SPDAlgebra
 
 function uniformweight(l)
     return 1.0
@@ -64,7 +63,6 @@ include("dendrograms/dendrograms.jl")
 # -------- #
 
 include("algebras/array_algebras.jl")
-include("algebras/spd_algebras.jl")
 
 # ---------- #
 # Operations #
