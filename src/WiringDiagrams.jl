@@ -7,6 +7,7 @@ using CliqueTrees: PermutationOrAlgorithm, SupernodeType, UnionFind,
     DEFAULT_ELIMINATION_ALGORITHM, DEFAULT_SUPERNODE_TYPE, linegraph,
     cliquetree!, incident, arcs
 using CliqueTrees.Utilities
+using FillArrays
 using Graphs
 using LinearAlgebra
 using SparseArrays
@@ -24,7 +25,7 @@ export Operation
 export WiringDiagram, DWiringDiagram, FWiringDiagram
 export StaticWiringDiagram
 export Dendrogram, DDendrogram, FDendrogram
-export ArrayAlgebra
+export ArrayAlgebra, SpanAlgebra
 
 function uniformweight(l)
     return 1.0
@@ -63,6 +64,7 @@ include("dendrograms/dendrograms.jl")
 # -------- #
 
 include("algebras/array_algebras.jl")
+include("algebras/span_algebras.jl")
 
 # ---------- #
 # Operations #
