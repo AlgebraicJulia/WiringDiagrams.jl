@@ -1,7 +1,7 @@
 module WiringDiagrams
 
 using AbstractTrees
-using Base: @propagate_inbounds, oneto
+using Base: @propagate_inbounds, oneto, Fix1
 using CliqueTrees
 using CliqueTrees: PermutationOrAlgorithm, SupernodeType, UnionFind,
     DEFAULT_ELIMINATION_ALGORITHM, DEFAULT_SUPERNODE_TYPE, linegraph,

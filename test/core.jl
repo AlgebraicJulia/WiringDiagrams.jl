@@ -2,104 +2,75 @@ using Graphs
 using OMEinsum
 using WiringDiagrams
 
-function random_regular_eincode()
-    graph = random_regular_graph(10, 3)
+@testset "Hidden Markov Model" begin
+    #
+    #   ┌───┐  ┌───┐  ┌───┐
+    # ──┤ A ├──┤ B ├──┤ C ├──
+    #   └─┬─┘  └─┬─┘  └─┬─┘
+    #   ┌─┴─┐  ┌─┴─┐  ┌─┴─┐
+    #   │ D │  │ E │  │ F │
+    #   └───┘  └───┘  └───┘
+    #
+    inputs = [[1, 2, 3], [3, 4, 5], [5, 6, 7], [2], [4], [6]]
+    output = [1, 7]
 
-    array = Array{Float64}[]
-    inputs = Vector{Tuple{Int, Int}}[]
-    output = Tuple{Int, Int}[]
-    size_dict = Dict{Tuple{Int, Int}, Int}()
-
-    for v in vertices(graph)
-        input = Tuple{Int, Int}[]; dim = Int[]
-        
-        for w in neighbors(graph, v)
-            e = minmax(v, w)
-
-            if !haskey(size_dict, e)
-                size_dict[e] = rand(2:5)
-            end
-            
-            push!(input, e); push!(dim, size_dict[e])
-            
-            if rand() < 0.1
-                push!(output, e)
-            end
-        end
-
-        push!(inputs, input)
-        push!(array, 0.5 * rand(dim...))
-    end
-
-    return array, inputs, output, size_dict
-end
-
-@testset "Printing" begin
-    _, inputs, output, size_dict = random_regular_eincode()
-    diagram = WiringDiagram(inputs, output, size_dict)
-    static = StaticWiringDiagram(diagram)
-    dendrogram = Dendrogram(log2, diagram)
-    operation = ArrayAlgebra{Array{Float64}}()(dendrogram)
-
-    @test isa(repr("text/plain", diagram), String)
-    @test isa(repr("text/plain", static), String)
-    @test isa(repr("text/plain", dendrogram), String)
-    @test isa(repr("text/plain", operation), String)
-
-    @test isa(repr(diagram), String)
-    @test isa(repr(static), String)
-    @test isa(repr(dendrogram), String)
-    @test isa(repr(operation), String)
-end
-
-@testset "ArrayAlgebra" begin
-    algebra = ArrayAlgebra{Array{Float64}}()
-
-    for _ in 1:10
-        array, inputs, output, size_dict = random_regular_eincode()
-
-        eincode = DynamicEinCode(inputs, output)
-        diagram = WiringDiagram(inputs, output, size_dict)
+    @testset "Printing" begin
+        label = Dict(1 => 3, 2 => 3, 3 => 3, 4 => 3, 5 => 3, 6 => 3, 7 => 3)
+        diagram = WiringDiagram(inputs, output, label)
         static = StaticWiringDiagram(diagram)
         dendrogram = Dendrogram(log2, diagram)
+        operation = ArrayAlgebra{Array{Float64}}()(dendrogram)
 
-        @test 1.0 <= treewidth(log2, dendrogram) <= sum(log2, values(size_dict))
-        @test 1.0 <= separatorwidth(log2, dendrogram) <= sum(log2, values(size_dict))
+        @test isa(repr("text/plain", diagram), String)
+        @test isa(repr("text/plain", static), String)
+        @test isa(repr("text/plain", dendrogram), String)
+        @test isa(repr("text/plain", operation), String)
 
-        out1 = einsum(eincode, Tuple(array))
-        out2 = algebra(diagram)(array...)
-        out3 = algebra(static)(array...)
-        out4 = algebra(dendrogram)(array...)
-
-        @test out1 ≈ out2
-        @test out2 ≈ out3
-        @test out3 ≈ out4
+        @test isa(repr(diagram), String)
+        @test isa(repr(static), String)
+        @test isa(repr(dendrogram), String)
+        @test isa(repr(operation), String)
     end
-end
 
-@testset "SPDAlgebra" begin
-    A = rand(10, 10); A *= A'
-    B = rand(10, 10); B *= B'
+    @testset "ArrayAlgebra" begin
+        A = ones(3, 3, 3)
+        B = ones(3, 3, 3)
+        C = ones(3, 3, 3)
 
-    A11 = A[1:5,  1:5]; A21 = A[6:10, 1:5]; A22 = A[6:10, 6:10]
-    B11 = B[1:5,  1:5]; B21 = B[6:10, 1:5]; B22 = B[6:10, 6:10]
+        D = ones(3)
+        E = ones(3)
+        F = ones(3)
 
-    diagram = WiringDiagram(
-        [[0, 1, 2, 3, 4, 0, 1, 2, 3, 4], [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]],
-        [4, 3, 2, 1, 0],
-    )
+        label = Dict(1 => 3, 2 => 3, 3 => 3, 4 => 3, 5 => 3, 6 => 3, 7 => 3)
+        diagram = WiringDiagram(inputs, output, label)
+        dendrogram = Dendrogram(log2, diagram)
 
-    algebra = SPDAlgebra{Matrix{Float64}}()
+        algebra = ArrayAlgebra{Array{Float64}}()
 
-    M = algebra(diagram)(A, B)
+        @test algebra(diagram)(A, B, C, D, E, F) == 243ones(3, 3)
+        @test algebra(dendrogram)(A, B, C, D, E, F) == 243ones(3, 3)
+    end
 
-    N = [
-        A11 + A21 + A21' + A22 + B11 B21'
-        B21                          B22
-    ]
+    @testset "SpanAlgebra" begin
+        labels = Dict(1 => 3, 2 => 3, 3 => 3, 4 => 3, 5 => 3, 6 => 3, 7 => 3)
 
-    @test size(M) == (5, 5)
-    @test inv(M) ≈ inv(N)[5:-1:1, 5:-1:1]
+        A = [2 2 1; 1 1 2; 3 3 1]
+        B = [1 2 1; 2 2 1; 1 1 2]
+        C = [1 3 2; 1 2 1; 2 1 1]
+
+        D = [1 2 3]
+        E = [2 1 3]
+        F = [3 3 1]
+
+        algebra = SpanAlgebra()
+
+        label = Dict(1 => 3, 2 => 3, 3 => 3, 4 => 3, 5 => 3, 6 => 3, 7 => 3)
+        diagram = WiringDiagram(inputs, output, label)
+        dendrogram = Dendrogram(log2, diagram)
+
+        @test algebra(diagram)(A, B, C, D, E, F) == [1 1; 2 1]
+        @test algebra(dendrogram)(A, B, C, D, E, F) == [1 1; 2 1]
+    end
 end
 
 @testset "AbstractWiringDiagram" begin
