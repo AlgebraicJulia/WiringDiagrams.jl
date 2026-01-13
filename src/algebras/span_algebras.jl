@@ -1,11 +1,11 @@
-struct SpanAlgebra <: AbstractAlgebra{Matrix{Int}} end
+struct SpanAlgebra{M <: AbstractMatrix} <: AbstractAlgebra{M} end
 
 function apply(algebra::SpanAlgebra, diagram::AbstractWiringDiagram, arguments)
     return apply(algebra, diagram, Tuple(arguments))
 end
 
 function apply(algebra::SpanAlgebra, diagram::AbstractWiringDiagram, tables::NTuple{N}) where {N}
-    return span_extend(diagram, span_join(diagram, tables))  
+    return span_extend(algebra, diagram, span_join(diagram, tables))  
 end
 
 function span_join(diagram::AbstractWiringDiagram, tables::NTuple{N}) where {N}
@@ -82,8 +82,9 @@ function span_join!(
         isconsistent = true
 
         @inbounds for (i, w) in enumerate(schema)
-            isconsistent &= record[w] in (0, table[i, j])
-            record[w] = table[i, j]
+            field = table[i, j]
+            isconsistent &= record[w] in (0, field)
+            record[w] = field
         end
 
         # if the join condition is satisfied, proceed
@@ -110,7 +111,7 @@ function span_join!(
     return reshape(outtable, length(outschema), :)
 end
 
-function span_extend(diagram::AbstractWiringDiagram, table::AbstractMatrix{Int})
+function span_extend(algebra::SpanAlgebra, diagram::AbstractWiringDiagram, table::AbstractMatrix{Int})
     mask = ones(Bool, nw(diagram))
 
     for w in portwires(diagram)
@@ -118,32 +119,33 @@ function span_extend(diagram::AbstractWiringDiagram, table::AbstractMatrix{Int})
     end
 
     schema = findall(mask)
-    return span_extend(diagram, table, Tuple(schema))
+    return span_extend(algebra, diagram, table, Tuple(schema))
 end
 
-function span_extend(diagram::AbstractWiringDiagram, table::AbstractMatrix{Int}, schema::Tuple)
+function span_extend(algebra::SpanAlgebra{M}, diagram::AbstractWiringDiagram, table::AbstractMatrix{Int}, schema::Tuple) where {M}
     sizes = map(Fix1(outportlabel, diagram), schema)
-    return span_extend(table, schema, sizes)
+    nrow = size(table, 1)
+    ncol = size(table, 2) * prod(sizes)
+    outtable = M(undef, nrow, ncol)
+    return span_extend!(outtable, table, schema, sizes)
 end
 
-function span_extend(table::AbstractMatrix{Int}, schema::NTuple{N, Int}, sizes::NTuple{N, Int}) where {N}
-    outtable = Int[]
+function span_extend!(outtable::AbstractMatrix{Int}, table::AbstractMatrix{Int}, schema::NTuple{N, Int}, sizes::NTuple{N, Int}) where {N}
+    num = prod(sizes)
 
-    for j in axes(table, 2)
-        record = @view table[:, j]
+    for col in axes(table, 2)
+        record = @view table[:, col]
 
-        for index in CartesianIndices(sizes)
-            for n in 1:N
-                record[schema[n]] = index[n]
+        for (i, fields) in enumerate(CartesianIndices(sizes))
+            outcol = (col - 1)num + i
+            outrecord  = @view outtable[:, outcol]
+            outrecord .= record
+
+            @inbounds for n in 1:N
+                outrecord[schema[n]] = fields[n]
             end
-
-            append!(outtable, record)
         end
     end
 
-    return reshape(outtable, size(table, 1), :)
-end
-
-function span_extend(table::AbstractMatrix{Int}, schema::Tuple{}, sizes::Tuple{})
-    return table
+    return outtable
 end
